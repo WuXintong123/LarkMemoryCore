@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Build and Test (ubuntu-22.04)
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Install build dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            ninja-build \
+            pkg-config \
+            libgrpc++-dev \
+            libgrpc-dev \
+            libprotobuf-dev \
+            libssl-dev \
+            libgtest-dev \
+            protobuf-compiler \
+            protobuf-compiler-grpc \
+            nlohmann-json3-dev
+
+      - name: Configure Root CMake
+        run: cmake --preset ci-linux
+
+      - name: Build Runtime and Test Targets
+        run: |
+          cmake --build --preset ci-linux-build \
+            --target generate_python_proto compute_server compute_server_tests
+
+      - name: Run CTest
+        run: ctest --preset ci-linux-test --output-on-failure --label-regex "cpp|python-unit"
