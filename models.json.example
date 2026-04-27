@@ -1,0 +1,68 @@
+{
+  "$schema": "./docs/models.schema.json",
+  "models": [
+    {
+      "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      "owned_by": "deepseek-ai",
+      "created": 1737363858,
+      "serving": {
+        "api_mode": "both",
+        "prompt_style": "buddy_deepseek_r1",
+        "default_max_tokens": 64,
+        "max_max_tokens": 256,
+        "max_input_chars": 32768,
+        "request_timeout_ms": 120000,
+        "stream_idle_timeout_s": 30,
+        "allow_anonymous_models": false
+      },
+      "tool": {
+        "cli_path": "/path/to/buddy-deepseek-r1-cli",
+        "numactl_nodes": "0,1,2,3",
+        "taskset_cpus": "0-47",
+        "extra_args": "--no-stats"
+      }
+    },
+    {
+      "id": "qwen/Qwen2.5-7B-Instruct",
+      "owned_by": "qwen",
+      "created": 1737363858,
+      "serving": {
+        "api_mode": "both",
+        "prompt_style": "chatml",
+        "default_max_tokens": 128,
+        "max_max_tokens": 512,
+        "max_input_chars": 32768,
+        "request_timeout_ms": 120000,
+        "stream_idle_timeout_s": 30,
+        "allow_anonymous_models": false
+      },
+      "tool": {
+        "cli_path": "/path/to/buddy-qwen-cli",
+        "numactl_nodes": "0,1",
+        "taskset_cpus": "0-23",
+        "extra_args": "--no-stats --max-tokens 2048"
+      }
+    },
+    {
+      "id": "ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice",
+      "owned_by": "ruyi-office",
+      "created": 1776441600,
+      "serving": {
+        "api_mode": "both",
+        "prompt_style": "buddy_deepseek_r1",
+        "default_max_tokens": 128,
+        "max_max_tokens": 256,
+        "max_input_chars": 32768,
+        "request_timeout_ms": 300000,
+        "stream_idle_timeout_s": 120,
+        "allow_anonymous_models": false
+      },
+      "tool": {
+        "cli_path": "/home/huangyiheng/.venvs/ruyi-feishu-office/bin/python",
+        "numactl_nodes": "",
+        "taskset_cpus": "",
+        "extra_args": "/path/to/competition/feishu_office/runtime/feishu_office_hf_cli.py --daemon-host 127.0.0.1 --daemon-port 19600"
+      }
+    }
+  ]
+}

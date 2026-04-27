@@ -1,0 +1,21 @@
+[Unit]
+Description=Ruyi Serving HTTPS Reverse Proxy (Caddy)
+After=network-online.target ruyi-api.service
+Wants=network-online.target
+Requires=ruyi-api.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/ruyi-serving
+Environment=HOME=%h
+ExecStart=%h/.local/bin/caddy run --config %h/.config/ruyi-serving/Caddyfile --adapter caddyfile
+ExecReload=%h/.local/bin/caddy reload --config %h/.config/ruyi-serving/Caddyfile --adapter caddyfile
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+KillMode=mixed
+StandardOutput=append:%h/ruyi-serving/.run/systemd-proxy.log
+StandardError=append:%h/ruyi-serving/.run/systemd-proxy.log
+
+[Install]
+WantedBy=default.target

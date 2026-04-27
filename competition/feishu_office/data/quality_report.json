@@ -1,0 +1,26 @@
+{
+  "total_rows": 1595,
+  "rows_by_split": {
+    "test": 345,
+    "train": 1070,
+    "validation": 180
+  },
+  "unique_sources_by_split": {
+    "test": 6,
+    "train": 23,
+    "validation": 5
+  },
+  "rows_by_task": {
+    "knowledge_qa": 319,
+    "information_summary": 319,
+    "meeting_minutes": 319,
+    "weekly_report": 319,
+    "standardized_response": 319
+  },
+  "rows_by_source_scheme": {
+    "repo": 430,
+    "https": 1165
+  },
+  "avg_input_chars": 446.71,
+  "avg_output_chars": 761.64
+}

@@ -1,0 +1,57 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base-debug",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "BUILD_TESTING": "ON",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "linux-debug",
+      "inherits": "base-debug",
+      "description": "Default Linux developer configure preset."
+    },
+    {
+      "name": "ci-linux",
+      "inherits": "base-debug",
+      "description": "Linux CI configure preset."
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-debug-build",
+      "configurePreset": "linux-debug"
+    },
+    {
+      "name": "ci-linux-build",
+      "configurePreset": "ci-linux"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux-debug-test",
+      "configurePreset": "linux-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-linux-test",
+      "configurePreset": "ci-linux",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# C++
+*.o
+*.a
+*.so
+*.dylib
+compute_server/build/
+compute_server/cmake-build-*/
+
+# Proto generated files
+api_server/proto/*_pb2.py
+api_server/proto/*_pb2_grpc.py
+compute_server/*.pb.cc
+compute_server/*.pb.h
+compute_server/*.grpc.pb.cc
+compute_server/*.grpc.pb.h
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+.hypothesis/
+.pytest_cache/
+.run/
+competition/feishu_office/cache/
+competition/feishu_office/artifacts/
+tests/cpp/test_model_validation
+tests/cpp/test_structured_logger
+tests/cpp/test_token_counter
+
+# Script command logs
+typescript
+
+# Kiro IDE
+.kiro/
+
+# Config files
+models.json
+.env
+fastapi.log

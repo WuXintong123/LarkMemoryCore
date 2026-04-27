@@ -1,0 +1,15 @@
+{
+  "manifest_path": "competition/feishu_office/source_manifest.json",
+  "task_order": [
+    "knowledge_qa",
+    "information_summary",
+    "meeting_minutes",
+    "weekly_report",
+    "standardized_response"
+  ],
+  "document_count": 34,
+  "row_count": 1595,
+  "train_row_count": 1070,
+  "validation_row_count": 180,
+  "test_row_count": 345
+}

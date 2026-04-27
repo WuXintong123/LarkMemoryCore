@@ -1,0 +1,81 @@
+// OpenClaw Feishu channel 接入 Ruyi Serving 配置示例
+//
+// 将此配置合并到 ~/.openclaw/openclaw.json 中
+//
+// 前提条件：
+//   1. Ruyi Serving API 服务已启动（联调建议使用 buddy-ascend 上的隔离实例 http://127.0.0.1:18100）
+//   2. 模型已注册（通过 models.json 或 admin API）
+//   3. Compute Server 已启动并连接
+//   4. 隔离联调实例建议显式设置 CLUSTER_CONFIG_FILE=""，避免旧部署状态污染结果
+//   5. API 与 Compute 都打开 RUYI_DEBUG_PROMPT_IO=1，便于核对 raw request / API prompt / compute prompt
+//
+// Ruyi 运行时模型配置前置条件（写在实际 models.json 的 serving 字段里）：
+//   - api_mode = both
+//   - prompt_style 必须与真实模型匹配；buddy-ascend 上的 DeepSeek R1 联调样例使用 buddy_deepseek_r1
+//   - default_max_tokens = 64
+//   - max_max_tokens = 256
+//   - request_timeout_ms = 30000
+//   - stream_idle_timeout_s = 30
+//   - max_input_chars 必须是大于 0 的真实限制值
+//
+// 使用方法：
+//   1. 复制此文件内容到 ~/.openclaw/openclaw.json（去掉注释）
+//   2. 修改 baseUrl 为你的 API 服务地址
+//   3. 设置 RUYI_API_KEY 环境变量（如果启用了认证），并保证它与联调实例使用的 API key 一致
+//   4. 修改 models 中的 id 与 models.json 中注册的模型 ID 完全一致
+//   5. 重启 OpenClaw Gateway: openclaw gateway restart
+//   6. 验证: openclaw models list
+//   7. Feishu channel 侧仅继续调用 OpenClaw 已有 OpenAI provider，不新增 Feishu 专用 endpoint
+//
+// 注意：
+//   - 如果使用 OpenClaw 2026.4.2 验收流式场景，provider 名称不要直接写成 "ruyi"。
+//     该版本会把 provider=ruyi 的 openai-completions 模型强制降成非流式；
+//     下面示例使用 provider 别名 `ruyi_stream` 作为稳定绕过方案。
+//   - models 中的 id 必须与 Ruyi Serving 注册的模型 ID 完全匹配
+//     例如 "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"，不能缩写
+//   - baseUrl 必须以 /v1 结尾
+//   - api 必须为 "openai-completions"
+//   - cost 全部为 0（本地推理无费用）
+//   - 服务端正式支持路径仍然只有 /v1/chat/completions
+//   - raw request 会完整记录到 trace，但 compute prompt 只取最后一条 user
+//   - 如果真实模型首个有效输出天然慢于 OpenClaw verify/check 的时间窗口，
+//     单独调整 ruyi-serving 不能保证 verify 一定成功
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ruyi_stream/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "ruyi_stream": {
+        "baseUrl": "http://127.0.0.1:18100/v1",
+        "apiKey": "${RUYI_API_KEY}",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+            "name": "DeepSeek R1 Distill Qwen 1.5B",
+            "reasoning": true,
+            "input": ["text"],
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+            "contextWindow": 32768,
+            "maxTokens": 8192
+          },
+          {
+            "id": "qwen/Qwen2.5-7B-Instruct",
+            "name": "Qwen 2.5 7B Instruct",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+            "contextWindow": 32768,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  }
+}

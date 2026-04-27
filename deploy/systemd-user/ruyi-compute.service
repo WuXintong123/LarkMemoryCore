@@ -1,0 +1,20 @@
+[Unit]
+Description=Ruyi Serving Compute Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/ruyi-serving
+Environment=HOME=%h
+EnvironmentFile=%h/ruyi-serving/.env
+ExecStart=/bin/bash -lc 'exec ./build/bin/compute_server'
+Restart=always
+RestartSec=5
+TimeoutStopSec=70
+KillMode=mixed
+StandardOutput=append:%h/ruyi-serving/.run/systemd-compute.log
+StandardError=append:%h/ruyi-serving/.run/systemd-compute.log
+
+[Install]
+WantedBy=default.target

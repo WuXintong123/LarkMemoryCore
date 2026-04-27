@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package compute;
+
+// Compute service definition
+service ComputeService {
+  // Process string input, return string result
+  rpc Process(ProcessRequest) returns (ProcessResponse);
+
+  // Process string input with streaming output
+  rpc ProcessStream(ProcessRequest) returns (stream StreamChunk);
+
+  // Health check
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+
+  // List available models
+  rpc ListModels(ListModelsRequest) returns (ListModelsResponse);
+
+  // Cancel an ongoing request
+  rpc CancelRequest(CancelRequestMessage) returns (CancelResponse);
+
+  // Get server metrics
+  rpc GetMetrics(MetricsRequest) returns (MetricsResponse);
+
+  // Reload model configuration from the configured source of truth
+  rpc ReloadModels(ReloadModelsRequest) returns (ReloadModelsResponse);
+}
+
+// Request message with inference parameters
+message ProcessRequest {
+  string input = 1;
+  string model_id = 2;
+
+  // Inference parameters
+  optional float temperature = 3;
+  optional int32 max_tokens = 4;
+  optional float top_p = 5;
+  optional int32 top_k = 6;
+  optional float repetition_penalty = 7;
+  optional int64 seed = 8;
+
+  // Request metadata
+  optional string request_id = 9;
+  optional int32 timeout_ms = 10;
+}
+
+// Response message with usage statistics
+message ProcessResponse {
+  string output = 1;
+  bool success = 2;
+  string error_message = 3;
+
+  // Statistics
+  optional UsageStats usage = 4;
+  optional string request_id = 5;
+  string completion_status = 6;
+  string completion_detail = 7;
+}
+
+// Usage statistics
+message UsageStats {
+  int32 prompt_tokens = 1;
+  int32 completion_tokens = 2;
+  int64 latency_ms = 3;
+  float tokens_per_second = 4;
+}
+
+// Streaming chunk message
+message StreamChunk {
+  string content = 1;       // Token or text chunk
+  bool is_final = 2;        // Whether this is the final chunk
+  string error_message = 3; // Error message if any
+
+  // Only in final chunk
+  optional UsageStats usage = 4;
+  optional string request_id = 5;
+  string completion_status = 6;
+  string completion_detail = 7;
+}
+
+// Health check messages
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  bool healthy = 1;
+  string version = 2;
+  int64 uptime_seconds = 3;
+  int32 active_requests = 4;
+  string status_message = 5;
+}
+
+// Model listing messages
+message ListModelsRequest {}
+
+message ListModelsResponse {
+  repeated ModelInfo models = 1;
+}
+
+message ModelServingPolicy {
+  string api_mode = 1;
+  string prompt_style = 2;
+  int32 default_max_tokens = 3;
+  int32 max_max_tokens = 4;
+  int32 max_input_chars = 5;
+  int32 request_timeout_ms = 6;
+  int32 stream_idle_timeout_s = 7;
+  bool allow_anonymous_models = 8;
+}
+
+message ModelInfo {
+  string model_id = 1;
+  bool ready = 2;
+  string owned_by = 3;
+  int64 created = 4;
+  ModelServingPolicy serving = 5;
+}
+
+// Cancel request messages
+message CancelRequestMessage {
+  string request_id = 1;
+}
+
+message CancelResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Metrics messages
+message MetricsRequest {}
+
+message MetricsResponse {
+  int64 total_requests = 1;
+  int64 successful_requests = 2;
+  int64 failed_requests = 3;
+  int64 total_tokens_processed = 4;
+  float average_latency_ms = 5;
+  float average_tokens_per_second = 6;
+  map<string, ModelMetrics> model_metrics = 7;
+  int64 rejected_requests = 8;
+  int64 queued_requests = 9;
+  int32 active_compute_slots = 10;
+  int32 max_compute_slots = 11;
+  int64 overload_rejections = 12;
+  int64 watchdog_timeouts = 13;
+  int64 partial_timeout_returns = 14;
+  int64 request_cancellations = 15;
+}
+
+message ReloadModelsRequest {}
+
+message ReloadModelsResponse {
+  bool success = 1;
+  int32 model_count = 2;
+  string message = 3;
+}
+
+message ModelMetrics {
+  int64 request_count = 1;
+  int64 total_tokens = 2;
+  float average_latency_ms = 3;
+}

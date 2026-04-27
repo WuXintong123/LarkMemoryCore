@@ -1,0 +1,14 @@
+{
+	admin off
+	auto_https off
+}
+
+https://127.0.0.1:18443, https://localhost:18443, https://__PUBLIC_IP__:18443 {
+	tls __HOME__/.config/ruyi-serving/tls/server.crt __HOME__/.config/ruyi-serving/tls/server.key
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8000
+	log {
+		output file __HOME__/ruyi-serving/.run/caddy_access.log
+		format json
+	}
+}

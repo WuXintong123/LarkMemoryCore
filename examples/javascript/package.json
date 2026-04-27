@@ -1,0 +1,11 @@
+{
+  "name": "ruyi-serving-js-examples",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "openai": "^6.8.1"
+  },
+  "scripts": {
+    "openai-sdk-compat": "node openai_sdk_compat.mjs"
+  }
+}
