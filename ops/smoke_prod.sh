@@ -10,7 +10,7 @@ require_repo_env
 
 cd "${REPO_ROOT}"
 
-REPO_ROOT="${REPO_ROOT}" "${RUYI_PYTHON_BIN}" - <<'PY'
+REPO_ROOT="${REPO_ROOT}" "${LARK_MEMORY_CORE_PYTHON_BIN}" - <<'PY'
 import json
 import os
 import requests
@@ -30,8 +30,8 @@ for raw_line in (repo_root / ".env").read_text(encoding="utf-8").splitlines():
     key, value = line.split("=", 1)
     env_values[key.strip()] = value.strip().strip("'\"")
 
-client_key_path = Path.home() / ".config/ruyi-serving/credentials/client_api_key.txt"
-admin_key_path = Path.home() / ".config/ruyi-serving/credentials/admin_api_key.txt"
+client_key_path = Path.home() / ".config/lark-memory-core/credentials/client_api_key.txt"
+admin_key_path = Path.home() / ".config/lark-memory-core/credentials/admin_api_key.txt"
 if client_key_path.exists():
     client_key = client_key_path.read_text(encoding="utf-8").strip()
 else:
@@ -83,14 +83,14 @@ else:
     models = json.loads(curl_json([f"{base_url}/v1/models"]))
 assert models["data"], "models list is empty"
 model_id = models["data"][0]["id"]
-assert "ruyi" in models["data"][0], "model capability extension missing"
+assert "lark_memory_core" in models["data"][0], "model capability extension missing"
 
 if client_key:
     model_detail = json.loads(curl_json([f"{base_url}/v1/models/{model_id}", "-H", f"Authorization: Bearer {client_key}"]))
 else:
     model_detail = json.loads(curl_json([f"{base_url}/v1/models/{model_id}"]))
 assert model_detail["id"] == model_id, "model detail endpoint returned wrong model"
-assert "supported_parameters" in model_detail["ruyi"], "model detail capability metadata missing"
+assert "supported_parameters" in model_detail["lark_memory_core"], "model detail capability metadata missing"
 
 if admin_key:
     metrics = json.loads(curl_json([f"{base_url}/v1/admin/metrics", "-H", f"Authorization: Bearer {admin_key}"]))
@@ -110,7 +110,7 @@ if admin_key:
         ["curl", "-fsS", f"{base_url}/metrics", "-H", f"Authorization: Bearer {admin_key}"],
         text=True,
     )
-    assert "ruyi_total_requests" in metrics_text, "prometheus metrics missing expected counter"
+    assert "lark_memory_core_total_requests" in metrics_text, "prometheus metrics missing expected counter"
     backends = json.loads(curl_json([f"{base_url}/v1/admin/backends", "-H", f"Authorization: Bearer {admin_key}"]))
     assert backends["data"], "backend list is empty"
     for backend in backends["data"]:
@@ -211,7 +211,7 @@ if smoke_check_rate_limit and client_key and rate_limit_rpm > 0:
     seen_429 = False
     for _ in range(rate_limit_rpm + 5):
         proc = subprocess.run(
-            ["curl", "-sS", "-o", "/tmp/ruyi-rate-limit.json", "-w", "%{http_code}", f"{base_url}/v1/chat/completions", *headers, "-d", invalid_payload],
+            ["curl", "-sS", "-o", "/tmp/lark-memory-core-rate-limit.json", "-w", "%{http_code}", f"{base_url}/v1/chat/completions", *headers, "-d", invalid_payload],
             capture_output=True,
             text=True,
         )

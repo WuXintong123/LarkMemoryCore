@@ -1,0 +1,21 @@
+[Unit]
+Description=LarkMemoryCore HTTPS Reverse Proxy (Caddy)
+After=network-online.target lark-memory-core-api.service
+Wants=network-online.target
+Requires=lark-memory-core-api.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/lark-memory-core
+Environment=HOME=%h
+ExecStart=%h/.local/bin/caddy run --config %h/.config/lark-memory-core/Caddyfile --adapter caddyfile
+ExecReload=%h/.local/bin/caddy reload --config %h/.config/lark-memory-core/Caddyfile --adapter caddyfile
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+KillMode=mixed
+StandardOutput=append:%h/lark-memory-core/.run/systemd-proxy.log
+StandardError=append:%h/lark-memory-core/.run/systemd-proxy.log
+
+[Install]
+WantedBy=default.target

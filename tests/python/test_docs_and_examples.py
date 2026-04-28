@@ -137,8 +137,8 @@ def test_openclaw_example_documents_isolated_verify_prerequisites():
         'baseUrl": "http://127.0.0.1:18100/v1"',
         'CLUSTER_CONFIG_FILE=""',
         "buddy-ascend",
-        "ruyi_stream",
-        '"primary": "ruyi_stream/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"',
+        "lark_memory_stream",
+        '"primary": "lark_memory_stream/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"',
         "default_max_tokens = 64",
         "request_timeout_ms = 30000",
         "stream_idle_timeout_s = 30",
@@ -154,10 +154,10 @@ def test_openclaw_feishu_runbook_documents_trace_and_release_flow():
     text = OPENCLAW_FEISHU_RUNBOOK_PATH.read_text(encoding="utf-8")
     for required_snippet in (
         "buddy-ascend",
-        "RUYI_DEBUG_PROMPT_IO=1",
+        "LARK_MEMORY_CORE_DEBUG_PROMPT_IO=1",
         "raw request",
         "compute prompt 只保留最后一条 `user`",
-        "ruyi_stream",
+        "lark_memory_stream",
         "/v1/chat/completions",
         "ops/openclaw_feishu_buddy_ascend_check.sh",
         "DM + 非流式",

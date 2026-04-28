@@ -1,12 +1,63 @@
 import os
 import subprocess
 import sys
+from io import BytesIO, StringIO
 from pathlib import Path
 
 import pytest
 
 
 CLI_PATH = Path("competition/feishu_office/runtime/feishu_office_hf_cli.py")
+
+
+def test_cli_timeout_is_configurable_for_cold_model_generation(monkeypatch):
+    from competition.feishu_office.runtime import feishu_office_hf_cli
+
+    captured = {}
+
+    class FakeSocket:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+        def sendall(self, payload):
+            captured["payload"] = payload
+
+        def makefile(self, mode):
+            captured["mode"] = mode
+            return BytesIO(b'{"type":"done"}\n')
+
+    def fake_create_connection(address, timeout):
+        captured["address"] = address
+        captured["timeout"] = timeout
+        return FakeSocket()
+
+    monkeypatch.setattr(
+        feishu_office_hf_cli.socket,
+        "create_connection",
+        fake_create_connection,
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "feishu_office_hf_cli.py",
+            "--daemon-host",
+            "127.0.0.1",
+            "--daemon-port",
+            "19600",
+            "--timeout-s",
+            "181",
+        ],
+    )
+    monkeypatch.setattr(sys, "stdin", StringIO("User: hello\n"))
+
+    assert feishu_office_hf_cli.main() == 0
+    assert captured["address"] == ("127.0.0.1", 19600)
+    assert captured["timeout"] == 181
+    assert b'"type": "generate"' in captured["payload"]
 
 
 @pytest.mark.skipif(
@@ -50,4 +101,3 @@ def test_real_daemon_generates_text_for_office_prompt():
     )
     assert completed.returncode == 0, completed.stderr
     assert completed.stdout.strip()
-

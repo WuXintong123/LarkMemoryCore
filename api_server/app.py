@@ -23,9 +23,9 @@ from .routers.root_health import router as root_health_router
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="Ruyi Serving API",
+        title="LarkMemoryCore API",
         description=(
-            "OpenAI API-compatible serving interface backed by the Ruyi Compute Server. "
+            "OpenAI API-compatible serving interface backed by the LarkMemoryCore Compute Server. "
             "Model metadata stays on the compute side; this API layer exposes normalized "
             "discovery, health, metrics, cancellation, and inference endpoints."
         ),

@@ -4,14 +4,14 @@ Status: Completed on the competition runtime with Feishu operator messaging.
 
 - Date: 2026-04-18
 - Host: buddy-ascend
-- Repo worktree: `/home/huangyiheng/src/ruyi-serving-feishu-live-20260416`
+- Repo worktree: `/home/huangyiheng/src/lark-memory-core-feishu-live-20260416`
 - Active branch: `fix/openclaw-real-user-question`
 - Competition runtime:
   - API: `127.0.0.1:18100`
   - compute: `0.0.0.0:19100`
   - tuned daemon: `127.0.0.1:19600`
-- Tuned model id: `ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice`
-- `RUYI_DEBUG_PROMPT_IO`: enabled on API and compute
+- Tuned model id: `lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice`
+- `LARK_MEMORY_CORE_DEBUG_PROMPT_IO`: enabled on API and compute
 
 ## Completed Checks
 
@@ -48,9 +48,9 @@ The runtime and log paths are ready for the operator:
 The existing verification script should be run with:
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
-export RUYI_FEISHU_API_LOG_PATH=.run/feishu-office-competition/logs/api.log
-export RUYI_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.log
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
+export LARK_MEMORY_CORE_FEISHU_API_LOG_PATH=.run/feishu-office-competition/logs/api.log
+export LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.log
 ./ops/openclaw_feishu_buddy_ascend_check.sh --scenario dm-nonstream --trace-token DM-NS-1-20260418-A --trace-token DM-NS-2-20260418-B
 ```
 

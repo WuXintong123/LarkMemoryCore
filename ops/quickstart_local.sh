@@ -7,7 +7,7 @@ source "${SCRIPT_DIR}/common.sh"
 RUN_DIR="${REPO_ROOT}/.run"
 COMPUTE_LOG="${RUN_DIR}/quickstart-compute.log"
 API_LOG="${RUN_DIR}/quickstart-api.log"
-PYTHON_BIN="${RUYI_PYTHON_BIN}"
+PYTHON_BIN="${LARK_MEMORY_CORE_PYTHON_BIN}"
 
 mkdir -p "${RUN_DIR}"
 cd "${REPO_ROOT}"
@@ -22,8 +22,8 @@ source ".env"
 set +a
 
 validate_active_runtime_config
-ruyi_configure_cmake
-ruyi_build_targets generate_python_proto compute_server
+lark_memory_core_configure_cmake
+lark_memory_core_build_targets generate_python_proto compute_server
 
 CURL_HOST="${API_BIND_HOST:-127.0.0.1}"
 if [[ "${CURL_HOST}" == "0.0.0.0" ]]; then
@@ -96,7 +96,7 @@ fi
 AUTH_ARGS=()
 CLIENT_API_KEY="${API_KEY:-}"
 if [[ -z "${CLIENT_API_KEY}" ]]; then
-  CLIENT_KEY_FILE="${HOME}/.config/ruyi-serving/credentials/client_api_key.txt"
+  CLIENT_KEY_FILE="${HOME}/.config/lark-memory-core/credentials/client_api_key.txt"
   if [[ -f "${CLIENT_KEY_FILE}" ]]; then
     CLIENT_API_KEY="$(tr -d '\r\n' < "${CLIENT_KEY_FILE}")"
   fi
@@ -108,7 +108,7 @@ fi
 MODELS_JSON=$(curl -fsS --max-time 10 "${AUTH_ARGS[@]}" "${BASE_URL}/v1/models") || {
   echo "[error] failed to list models from ${BASE_URL}/v1/models" >&2
   if [[ -z "${CLIENT_API_KEY}" ]]; then
-    echo "[hint] If auth is enabled, set API_KEY in .env or provide ~/.config/ruyi-serving/credentials/client_api_key.txt." >&2
+    echo "[hint] If auth is enabled, set API_KEY in .env or provide ~/.config/lark-memory-core/credentials/client_api_key.txt." >&2
   fi
   show_logs
   exit 1

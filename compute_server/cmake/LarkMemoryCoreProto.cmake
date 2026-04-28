@@ -17,14 +17,14 @@ elseif(DEFINED GRPC_CPP_PLUGIN AND EXISTS "${GRPC_CPP_PLUGIN}")
 else()
     find_program(GRPC_CPP_PLUGIN_EXECUTABLE
         NAMES grpc_cpp_plugin
-        PATHS ${RUYI_MANUAL_BIN_PATHS}
+        PATHS ${LARK_MEMORY_CORE_MANUAL_BIN_PATHS}
     )
 endif()
 
 if(NOT GRPC_CPP_PLUGIN_EXECUTABLE)
     message(FATAL_ERROR
         "grpc_cpp_plugin not found. Install the gRPC compiler plugin.\n"
-        "  ${RUYI_GRPC_INSTALL_HINT}"
+        "  ${LARK_MEMORY_CORE_GRPC_INSTALL_HINT}"
     )
 endif()
 

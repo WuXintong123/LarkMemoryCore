@@ -52,13 +52,13 @@ class ChatCompletionRequest(BaseModel):
         default=None,
         ge=-2.0,
         le=2.0,
-        description="Accepted by schema but explicitly rejected by Ruyi for compatibility clarity.",
+        description="Accepted by schema but explicitly rejected by LarkMemoryCore for compatibility clarity.",
     )
     presence_penalty: Optional[float] = Field(
         default=None,
         ge=-2.0,
         le=2.0,
-        description="Accepted by schema but explicitly rejected by Ruyi for compatibility clarity.",
+        description="Accepted by schema but explicitly rejected by LarkMemoryCore for compatibility clarity.",
     )
     seed: Optional[int] = Field(default=None, description="Optional deterministic sampling seed.")
     stream: Optional[bool] = Field(default=False, description="Enable streaming SSE responses.")
@@ -66,11 +66,11 @@ class ChatCompletionRequest(BaseModel):
         default=1,
         ge=1,
         le=1,
-        description="Ruyi currently supports n=1 only.",
+        description="LarkMemoryCore currently supports n=1 only.",
     )
     stop: Optional[Union[str, List[str]]] = Field(
         default=None,
-        description="Accepted by schema but explicitly rejected by Ruyi for compatibility clarity.",
+        description="Accepted by schema but explicitly rejected by LarkMemoryCore for compatibility clarity.",
     )
     user: Optional[str] = Field(
         default=None,
@@ -96,19 +96,19 @@ class CompletionRequest(BaseModel):
     top_p: Optional[float] = Field(default=1.0, ge=0.0, le=1.0, description="Nucleus sampling threshold.")
     top_k: Optional[int] = Field(default=None, ge=1, description="Top-k sampling cutoff when supported by the backend.")
     repetition_penalty: Optional[float] = Field(default=None, ge=0.0, description="Penalty factor applied to repeated tokens.")
-    frequency_penalty: Optional[float] = Field(default=None, ge=-2.0, le=2.0, description="Accepted by schema but explicitly rejected by Ruyi.")
-    presence_penalty: Optional[float] = Field(default=None, ge=-2.0, le=2.0, description="Accepted by schema but explicitly rejected by Ruyi.")
+    frequency_penalty: Optional[float] = Field(default=None, ge=-2.0, le=2.0, description="Accepted by schema but explicitly rejected by LarkMemoryCore.")
+    presence_penalty: Optional[float] = Field(default=None, ge=-2.0, le=2.0, description="Accepted by schema but explicitly rejected by LarkMemoryCore.")
     seed: Optional[int] = Field(default=None, description="Optional deterministic sampling seed.")
     stream: Optional[bool] = Field(default=False, description="Enable streaming SSE responses. Only one prompt is allowed when stream=true.")
-    n: Optional[int] = Field(default=1, ge=1, le=1, description="Ruyi currently supports n=1 only.")
-    stop: Optional[Union[str, List[str]]] = Field(default=None, description="Accepted by schema but explicitly rejected by Ruyi.")
+    n: Optional[int] = Field(default=1, ge=1, le=1, description="LarkMemoryCore currently supports n=1 only.")
+    stop: Optional[Union[str, List[str]]] = Field(default=None, description="Accepted by schema but explicitly rejected by LarkMemoryCore.")
     echo: Optional[bool] = Field(default=False, description="When true, echo the prompt back in each completion choice.")
     user: Optional[str] = Field(default=None, description="Optional caller identifier preserved for compatibility.")
 
 
 class RegisterModelRequest(BaseModel):
     id: str = Field(..., description="Model ID")
-    owned_by: Optional[str] = Field(default="ruyi-serving", description="Model owner")
+    owned_by: Optional[str] = Field(default="lark-memory-core", description="Model owner")
     created: Optional[int] = Field(default=None, description="Creation timestamp")
 
 

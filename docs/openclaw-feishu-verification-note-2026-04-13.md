@@ -8,13 +8,13 @@ Status: Completed on `buddy-ascend` isolated validation instance.
 - API port: 48100
 - Compute port: 49100
 - OpenClaw profile: `trace`
-- Feishu app: `Ruyi Test Bot` (`cli_a95e2f98f3b81ccb`)
-- RUYI_DEBUG_PROMPT_IO: enabled on API and compute
+- Feishu app: `LarkMemoryCore Test Bot` (`cli_a95e2f98f3b81ccb`)
+- LARK_MEMORY_CORE_DEBUG_PROMPT_IO: enabled on API and compute
 
 Known validation note:
-OpenClaw `2026.4.2` hard-codes `provider === "ruyi"` to non-streaming in its
+OpenClaw `2026.4.2` hard-codes `provider === "lark_memory_core"` to non-streaming in its
 `openai-completions` provider. Streaming validation on `buddy-ascend` used a
-provider alias `ruyi_stream` in `~/.openclaw/openclaw.json`.
+provider alias `lark_memory_stream` in `~/.openclaw/openclaw.json`.
 
 ## Scenario Summary
 
@@ -22,8 +22,8 @@ provider alias `ruyi_stream` in `~/.openclaw/openclaw.json`.
 | --- | --- | --- | --- |
 | DM + non-stream | `DM-NS-1-20260413-B` | `DM-NS-2-20260413-B` | pass |
 | DM + stream | `DM-S-1-20260413-D` | `DM-S-2-20260413-D` | pass |
-| Group `@bot` + non-stream | `GROUP-NS-1-20260413-B` | `@Ruyi Test Bot GROUP-NS-2-20260413-C` | pass |
-| Group `@bot` + stream | `@Ruyi Test Bot GROUP-S-1-20260413-A` | `@Ruyi Test Bot GROUP-S-2-20260413-B` | pass |
+| Group `@bot` + non-stream | `GROUP-NS-1-20260413-B` | `@LarkMemoryCore Test Bot GROUP-NS-2-20260413-C` | pass |
+| Group `@bot` + stream | `@LarkMemoryCore Test Bot GROUP-S-1-20260413-A` | `@LarkMemoryCore Test Bot GROUP-S-2-20260413-B` | pass |
 
 ## Mandatory Evidence Per Scenario
 
@@ -39,7 +39,7 @@ provider alias `ruyi_stream` in `~/.openclaw/openclaw.json`.
   - `Compute server received prompt`: `360e5c93-b290-460a-be18-4e7e5ad313d9`
   - `X-Request-Id`: `360e5c93-b290-460a-be18-4e7e5ad313d9`
   - `content-type`: `text/event-stream; charset=utf-8`
-  - Result summary: OpenClaw DM streaming reached Ruyi with `stream:true`; second-round raw request contained first-round history.
+  - Result summary: OpenClaw DM streaming reached LarkMemoryCore with `stream:true`; second-round raw request contained first-round history.
 - Group `@bot` + non-stream:
   - `API server received raw request`: `23c7c32a-bbb6-43ea-a2ca-be1336b0e460`
   - `API server received prompt`: `23c7c32a-bbb6-43ea-a2ca-be1336b0e460`
@@ -52,10 +52,10 @@ provider alias `ruyi_stream` in `~/.openclaw/openclaw.json`.
   - `Compute server received prompt`: `fb9a372d-3faf-4233-aa13-8e063415af69`
   - `X-Request-Id`: `fb9a372d-3faf-4233-aa13-8e063415af69`
   - `content-type`: `text/event-stream; charset=utf-8`
-  - Result summary: group streaming required the `ruyi_stream` provider alias; after switching, second-round raw request arrived with `stream:true` and compute saw only the latest `user`.
+  - Result summary: group streaming required the `lark_memory_stream` provider alias; after switching, second-round raw request arrived with `stream:true` and compute saw only the latest `user`.
 
 ## Final Release Decision
 
 - Overall result: pass
-- Blocking issue: none in `ruyi-serving`; external validation note recorded for OpenClaw `provider=ruyi` non-streaming behavior
+- Blocking issue: none in `lark-memory-core`; external validation note recorded for OpenClaw `provider=lark_memory_core` non-streaming behavior
 - Follow-up owner: OpenClaw upstream for provider-name-specific streaming workaround removal

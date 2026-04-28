@@ -3,7 +3,7 @@
 ## Goal
 
 Tune `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B` for Feishu office tasks while
-keeping the existing Ruyi Serving HTTP and gRPC contract unchanged.
+keeping the existing LarkMemoryCore HTTP and gRPC contract unchanged.
 
 ## Method
 
@@ -55,8 +55,8 @@ and include:
 - Command:
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
-$HOME/.venvs/ruyi-feishu-office/bin/python \
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
+$HOME/.venvs/lark-memory-feishu-office/bin/python \
   competition/feishu_office/train_qlora.py \
   --output-dir competition/feishu_office/artifacts/adapter \
   --max-steps 60 \

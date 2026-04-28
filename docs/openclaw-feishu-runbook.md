@@ -1,13 +1,13 @@
-# OpenClaw Feishu + Ruyi Serving Runbook
+# OpenClaw Feishu + LarkMemoryCore Runbook
 
 ## 1. 目标
 
-这份 runbook 用于 `buddy-ascend` 上的隔离 OpenClaw + Feishu + Ruyi Serving 实机联调。
+这份 runbook 用于 `buddy-ascend` 上的隔离 OpenClaw + Feishu + LarkMemoryCore 实机联调。
 
 竞赛交付版本统一使用 `./ops/feishu_office_competition_preflight.sh`、
 `./ops/feishu_office_competition_start.sh` 和
 `./ops/feishu_office_competition_stop.sh` 管理运行时，而不是切回
-`~/ruyi-serving` 那套默认 `systemd --user` 部署。
+`~/lark-memory-core` 那套默认 `systemd --user` 部署。
 
 本次唯一行为基线是：
 
@@ -33,7 +33,7 @@ python3 -m pytest -q tests/python/test_grpc_contracts.py
    - API: `127.0.0.1:18100`
    - compute: `0.0.0.0:19100`
    - tuned daemon: `127.0.0.1:19600`
-3. API 和 compute 进程都导出 `RUYI_DEBUG_PROMPT_IO=1`。
+3. API 和 compute 进程都导出 `LARK_MEMORY_CORE_DEBUG_PROMPT_IO=1`。
 4. 隔离环境显式设置 `CLUSTER_CONFIG_FILE=""`。
 5. 确认真实模型 `serving` 配置已经包含：
    - `api_mode = both`
@@ -49,12 +49,12 @@ python3 -m pytest -q tests/python/test_grpc_contracts.py
 1. 使用 `examples/openclaw_config.jsonc` 作为 provider 样例。
 2. `baseUrl` 固定写成 `http://127.0.0.1:18100/v1`。
 3. OpenClaw Feishu channel 继续走已有 OpenAI provider，不新增 Feishu 专用 endpoint。
-4. 竞赛运行时默认从 `~/.openclaw/.env` 读取 `RUYI_API_KEY` 与
+4. 竞赛运行时默认从 `~/.openclaw/.env` 读取 `LARK_MEMORY_CORE_API_KEY` 与
    `OPENCLAW_GATEWAY_TOKEN`，并由 `ops/feishu_office_competition_start.sh`
    自动重启 gateway。
-5. 如果使用 OpenClaw `2026.4.2` 验收流式场景，保留样例里的 provider 别名 `ruyi_stream`。
-   已知现象：该版本会把 provider 名称等于 `ruyi` 的 openai-completions 模型强制降成非流式。
-6. 设置 `RUYI_API_KEY`，确保与隔离实例一致。
+5. 如果使用 OpenClaw `2026.4.2` 验收流式场景，保留样例里的 provider 别名 `lark_memory_stream`。
+   已知现象：该版本会把 provider 名称等于 `lark_memory_core` 的 openai-completions 模型强制降成非流式。
+6. 设置 `LARK_MEMORY_CORE_API_KEY`，确保与隔离实例一致。
 7. 重启 OpenClaw Gateway：
 
 ```bash
@@ -67,9 +67,9 @@ openclaw models list
 1. 先运行服务侧检查脚本：
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
-export RUYI_FEISHU_API_LOG_PATH=.run/feishu-office-competition/logs/api.log
-export RUYI_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.log
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
+export LARK_MEMORY_CORE_FEISHU_API_LOG_PATH=.run/feishu-office-competition/logs/api.log
+export LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.log
 ./ops/openclaw_feishu_buddy_ascend_check.sh \
   --scenario dm-nonstream \
   --trace-token DM-NS-1-20260418-A \
@@ -86,11 +86,11 @@ export RUYI_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.
    - 群聊 `@bot` + 非流式
    - 群聊 `@bot` + 流式
 4. 每个场景都换两条新的 trace token，避免日志串场。
-5. 开始流式场景前，确认 OpenClaw 当前主模型仍指向 `ruyi_stream/...`。
+5. 开始流式场景前，确认 OpenClaw 当前主模型仍指向 `lark_memory_stream/...`。
 6. 对流式场景，按回车前可以先确认：
 
 ```bash
-curl -fsS -H "Authorization: Bearer $(cat /home/huangyiheng/src/ruyi-serving-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)" \
+curl -fsS -H "Authorization: Bearer $(cat /home/huangyiheng/src/lark-memory-core-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)" \
   http://127.0.0.1:18100/v1/admin/metrics
 ```
 
@@ -117,11 +117,11 @@ curl -fsS -H "Authorization: Bearer $(cat /home/huangyiheng/src/ruyi-serving-fei
 4. 如果流式返回不是 `text/event-stream`：
    - 直接判定失败
 5. 如果日志缺少 `API server received raw request` 或 `Compute server received prompt`：
-   - 先确认两个进程都打开了 `RUYI_DEBUG_PROMPT_IO=1`
+   - 先确认两个进程都打开了 `LARK_MEMORY_CORE_DEBUG_PROMPT_IO=1`
    - 再确认脚本读取的是本次隔离实例的日志
 6. 如果 OpenClaw 已配置流式，但 API raw request 里仍然是 `stream:false`：
-   - 优先检查 provider 名称是不是仍然是 `ruyi`
-   - 改用 `ruyi_stream` 后再重试
+   - 优先检查 provider 名称是不是仍然是 `lark_memory_core`
+   - 改用 `lark_memory_stream` 后再重试
 7. 如果流式场景第一次核验失败，但 OpenClaw 会话和 API/compute 日志里已经能看到相同 trace token：
    - 先等待流式第二轮完全结束
    - 再用相同 scenario 和相同两条 trace token 重跑一次核验脚本

@@ -38,7 +38,7 @@ async def test_ready_returns_200_when_compute_and_models_are_available():
             "id": "model-a",
             "object": "model",
             "created": 1,
-            "owned_by": "ruyi",
+            "owned_by": "lark_memory_core",
             "_serving_policy": {},
         }
     ]
@@ -68,7 +68,7 @@ async def test_ready_returns_503_when_compute_unhealthy():
             "id": "model-a",
             "object": "model",
             "created": 1,
-            "owned_by": "ruyi",
+            "owned_by": "lark_memory_core",
             "_serving_policy": {},
         }
     ]

@@ -50,11 +50,11 @@ wait_for_http "http://${API_HOST}:${API_PORT}/ready"
 
 OPENCLAW_BIN=$(resolve_openclaw_bin)
 if [[ -n "${OPENCLAW_BIN}" ]]; then
-  export RUYI_API_KEY
+  export LARK_MEMORY_CORE_API_KEY
   export OPENCLAW_GATEWAY_TOKEN
-  RUYI_API_KEY=$(read_runtime_api_key)
+  LARK_MEMORY_CORE_API_KEY=$(read_runtime_api_key)
   OPENCLAW_GATEWAY_TOKEN=$(read_openclaw_env_var "OPENCLAW_GATEWAY_TOKEN")
-  bash -lc "source ~/.nvm/nvm.sh >/dev/null 2>&1 && export RUYI_API_KEY='${RUYI_API_KEY}' OPENCLAW_GATEWAY_TOKEN='${OPENCLAW_GATEWAY_TOKEN}' && openclaw gateway restart >/dev/null && openclaw models list >/dev/null"
+  bash -lc "source ~/.nvm/nvm.sh >/dev/null 2>&1 && export LARK_MEMORY_CORE_API_KEY='${LARK_MEMORY_CORE_API_KEY}' OPENCLAW_GATEWAY_TOKEN='${OPENCLAW_GATEWAY_TOKEN}' && openclaw gateway restart >/dev/null && openclaw models list >/dev/null"
 fi
 
 echo "feishu-office competition runtime started"

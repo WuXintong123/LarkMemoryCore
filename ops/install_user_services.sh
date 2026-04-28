@@ -7,7 +7,7 @@ export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 export SYSTEMD_PAGER=
 source "${REPO_ROOT}/ops/common.sh"
 
-mkdir -p "$HOME/.config/systemd/user" "$HOME/.config/ruyi-serving" "$HOME/.local/bin" "$REPO_ROOT/.run"
+mkdir -p "$HOME/.config/systemd/user" "$HOME/.config/lark-memory-core" "$HOME/.local/bin" "$REPO_ROOT/.run"
 
 install_caddy() {
   if [[ -x "$HOME/.local/bin/caddy" ]]; then
@@ -18,7 +18,7 @@ install_caddy() {
   tmpdir=$(mktemp -d)
   trap 'rm -rf "$tmpdir"' RETURN
 
-  asset_url=$(ruyi_python - <<'PY'
+  asset_url=$(lark_memory_core_python - <<'PY'
 import json
 import urllib.request
 
@@ -42,14 +42,14 @@ PY
 }
 
 build_compute_server() {
-  ruyi_configure_cmake
-  ruyi_build_targets generate_python_proto compute_server
+  lark_memory_core_configure_cmake
+  lark_memory_core_build_targets generate_python_proto compute_server
   echo "[ok] built runtime artifacts for current machine"
 }
 
 ensure_model_config() {
-  if [[ -f "$HOME/.config/ruyi-serving/models.json" ]]; then
-    echo "[ok] using existing model config: $HOME/.config/ruyi-serving/models.json"
+  if [[ -f "$HOME/.config/lark-memory-core/models.json" ]]; then
+    echo "[ok] using existing model config: $HOME/.config/lark-memory-core/models.json"
     return
   fi
 
@@ -58,36 +58,36 @@ ensure_model_config() {
     exit 1
   fi
 
-  cp "$REPO_ROOT/models.json.example" "$HOME/.config/ruyi-serving/models.json"
-  echo "[ok] copied model template to: $HOME/.config/ruyi-serving/models.json"
+  cp "$REPO_ROOT/models.json.example" "$HOME/.config/lark-memory-core/models.json"
+  echo "[ok] copied model template to: $HOME/.config/lark-memory-core/models.json"
 }
 
 ensure_tls_cert() {
-  mkdir -p "$HOME/.config/ruyi-serving/tls"
-  if [[ -f "$HOME/.config/ruyi-serving/tls/server.crt" && -f "$HOME/.config/ruyi-serving/tls/server.key" ]]; then
+  mkdir -p "$HOME/.config/lark-memory-core/tls"
+  if [[ -f "$HOME/.config/lark-memory-core/tls/server.crt" && -f "$HOME/.config/lark-memory-core/tls/server.key" ]]; then
     echo "[ok] using existing self-signed TLS certificate"
     return
   fi
 
   public_ip=$(curl -4 -fsS --max-time 10 https://ifconfig.me || echo 127.0.0.1)
-  openssl req -x509 -nodes -newkey rsa:2048 -days 3650     -keyout "$HOME/.config/ruyi-serving/tls/server.key"     -out "$HOME/.config/ruyi-serving/tls/server.crt"     -subj "/CN=localhost"     -addext "subjectAltName=DNS:localhost,DNS:plct-gpu,IP:127.0.0.1,IP:${public_ip}"
-  chmod 600 "$HOME/.config/ruyi-serving/tls/server.key" "$HOME/.config/ruyi-serving/tls/server.crt"
+  openssl req -x509 -nodes -newkey rsa:2048 -days 3650     -keyout "$HOME/.config/lark-memory-core/tls/server.key"     -out "$HOME/.config/lark-memory-core/tls/server.crt"     -subj "/CN=localhost"     -addext "subjectAltName=DNS:localhost,DNS:plct-gpu,IP:127.0.0.1,IP:${public_ip}"
+  chmod 600 "$HOME/.config/lark-memory-core/tls/server.key" "$HOME/.config/lark-memory-core/tls/server.crt"
   echo "[ok] generated self-signed TLS certificate"
 }
 
 install_units() {
-  cp "$REPO_ROOT/deploy/systemd-user/ruyi-compute.service" "$HOME/.config/systemd/user/"
-  cp "$REPO_ROOT/deploy/systemd-user/ruyi-api.service" "$HOME/.config/systemd/user/"
-  cp "$REPO_ROOT/deploy/systemd-user/ruyi-proxy.service" "$HOME/.config/systemd/user/"
-  ruyi_python "$REPO_ROOT/ops/systemd_layout.py" write-target "$HOME/.config/systemd/user/ruyi-serving.target"
+  cp "$REPO_ROOT/deploy/systemd-user/lark-memory-core-compute.service" "$HOME/.config/systemd/user/"
+  cp "$REPO_ROOT/deploy/systemd-user/lark-memory-core-api.service" "$HOME/.config/systemd/user/"
+  cp "$REPO_ROOT/deploy/systemd-user/lark-memory-core-proxy.service" "$HOME/.config/systemd/user/"
+  lark_memory_core_python "$REPO_ROOT/ops/systemd_layout.py" write-target "$HOME/.config/systemd/user/lark-memory-core.target"
   public_ip=$(curl -4 -fsS --max-time 10 https://ifconfig.me || echo 127.0.0.1)
-  sed -e "s#__PUBLIC_IP__#${public_ip}#g" -e "s#__HOME__#${HOME}#g" "$REPO_ROOT/deploy/caddy/Caddyfile" > "$HOME/.config/ruyi-serving/Caddyfile"
+  sed -e "s#__PUBLIC_IP__#${public_ip}#g" -e "s#__HOME__#${HOME}#g" "$REPO_ROOT/deploy/caddy/Caddyfile" > "$HOME/.config/lark-memory-core/Caddyfile"
   echo "[ok] installed systemd user units and Caddyfile (public_ip=${public_ip})"
 }
 
 stop_existing_listeners() {
   local ports=()
-  mapfile -t compute_ports < <(ruyi_local_compute_ports)
+  mapfile -t compute_ports < <(lark_memory_core_local_compute_ports)
   ports=(8000 18080 18443 "${compute_ports[@]}")
   for port in $(printf '%s\n' "${ports[@]}" | sed '/^$/d' | sort -u); do
     if ss -lntp | grep -q ":${port} "; then
@@ -116,8 +116,8 @@ build_compute_server
 install_units
 stop_existing_listeners
 systemctl --user daemon-reload
-mapfile -t managed_units < <(ruyi_managed_units)
-systemctl --user enable "${managed_units[@]}" ruyi-serving.target >/dev/null
+mapfile -t managed_units < <(lark_memory_core_managed_units)
+systemctl --user enable "${managed_units[@]}" lark-memory-core.target >/dev/null
 systemctl --user restart "${managed_units[@]}"
 warn_linger
 systemctl --user --no-pager --full status "${managed_units[@]}" | sed -n '1,160p'

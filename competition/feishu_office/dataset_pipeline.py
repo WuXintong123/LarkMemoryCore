@@ -23,7 +23,7 @@ COMPETITION_ROOT = Path(__file__).resolve().parent
 DEFAULT_MANIFEST_PATH = COMPETITION_ROOT / "source_manifest.json"
 DEFAULT_OUTPUT_DIR = COMPETITION_ROOT / "data"
 DEFAULT_CACHE_DIR = COMPETITION_ROOT / "cache"
-USER_AGENT = "Ruyi-FeishuOfficeDatasetBuilder/1.0 (+https://github.com/RuyiAI-Stack/ruyi-serving)"
+USER_AGENT = "LarkMemoryCore-FeishuOfficeDatasetBuilder/1.0 (+https://github.com/WuXintong123/LarkMemoryCore)"
 TASK_ORDER = (
     "knowledge_qa",
     "information_summary",

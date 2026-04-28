@@ -25,11 +25,11 @@ from api_server.auth import ApiKeyAuthManager
 from api_server.main import app, check_rate_limit
 
 
-def _assert_ruyi_capabilities(payload: dict) -> None:
-    ruyi = payload["ruyi"]
-    assert "supported_endpoints" in ruyi
-    assert "supported_parameters" in ruyi
-    assert "unsupported_parameters" in ruyi
+def _assert_lark_memory_core_capabilities(payload: dict) -> None:
+    lark_memory_core = payload["lark_memory_core"]
+    assert "supported_endpoints" in lark_memory_core
+    assert "supported_parameters" in lark_memory_core
+    assert "unsupported_parameters" in lark_memory_core
 
 
 def _disabled_auth_manager() -> ApiKeyAuthManager:
@@ -76,7 +76,7 @@ async def test_models_require_auth_when_api_keys_enabled():
             "id": "model-a",
             "object": "model",
             "created": 1,
-            "owned_by": "ruyi",
+            "owned_by": "lark_memory_core",
             "_serving_policy": {"allow_anonymous_models": False},
         }
     ]
@@ -152,8 +152,8 @@ async def test_model_allowlist_filters_model_list():
         '{"keys":[{"key_id":"tenant-a","secret":"sk-tenant-a","scopes":["inference"],"models":["model-a"]}]}'
     )
     fake_models = [
-        {"id": "model-a", "object": "model", "created": 1, "owned_by": "ruyi"},
-        {"id": "model-b", "object": "model", "created": 2, "owned_by": "ruyi"},
+        {"id": "model-a", "object": "model", "created": 1, "owned_by": "lark_memory_core"},
+        {"id": "model-b", "object": "model", "created": 2, "owned_by": "lark_memory_core"},
     ]
     with patch("api_server.main.auth_manager", manager), patch(
         "api_server.main._load_models_from_compute",
@@ -168,7 +168,7 @@ async def test_model_allowlist_filters_model_list():
 
     assert response.status_code == 200
     assert response.json()["data"][0]["id"] == fake_models[0]["id"]
-    _assert_ruyi_capabilities(response.json()["data"][0])
+    _assert_lark_memory_core_capabilities(response.json()["data"][0])
 
 
 @pytest.mark.asyncio
@@ -205,7 +205,7 @@ async def test_secret_sha256_configuration_authenticates():
         % secret_sha256
     )
     fake_models = [
-        {"id": "model-a", "object": "model", "created": 1, "owned_by": "ruyi"}
+        {"id": "model-a", "object": "model", "created": 1, "owned_by": "lark_memory_core"}
     ]
     with patch("api_server.main.auth_manager", manager), patch(
         "api_server.main._load_models_from_compute",
@@ -220,7 +220,7 @@ async def test_secret_sha256_configuration_authenticates():
 
     assert response.status_code == 200
     assert response.json()["data"][0]["id"] == fake_models[0]["id"]
-    _assert_ruyi_capabilities(response.json()["data"][0])
+    _assert_lark_memory_core_capabilities(response.json()["data"][0])
 
 
 @pytest.mark.asyncio
@@ -253,7 +253,7 @@ async def test_rate_limit_uses_key_id_instead_of_raw_secret():
 @pytest.mark.asyncio
 async def test_no_auth_manager_still_allows_public_model_list():
     fake_models = [
-        {"id": "model-a", "object": "model", "created": 1, "owned_by": "ruyi"}
+        {"id": "model-a", "object": "model", "created": 1, "owned_by": "lark_memory_core"}
     ]
     with patch("api_server.main.auth_manager", _disabled_auth_manager()), patch(
         "api_server.main._load_models_from_compute",
@@ -265,4 +265,4 @@ async def test_no_auth_manager_still_allows_public_model_list():
 
     assert response.status_code == 200
     assert response.json()["data"][0]["id"] == fake_models[0]["id"]
-    _assert_ruyi_capabilities(response.json()["data"][0])
+    _assert_lark_memory_core_capabilities(response.json()["data"][0])

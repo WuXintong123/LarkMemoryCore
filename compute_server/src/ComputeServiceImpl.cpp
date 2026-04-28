@@ -25,7 +25,7 @@ namespace compute {
 namespace {
 
 bool promptTraceEnabled() {
-  const char *value = std::getenv("RUYI_DEBUG_PROMPT_IO");
+  const char *value = std::getenv("LARK_MEMORY_CORE_DEBUG_PROMPT_IO");
   if (!value) {
     return false;
   }

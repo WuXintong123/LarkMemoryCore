@@ -101,11 +101,11 @@ def public_model_dict(model_record: Dict[str, Any]) -> Dict[str, Any]:
         for key, value in model_record.items()
         if not key.startswith("_")
     }
-    public_record["ruyi"] = build_ruyi_model_capabilities(model_record)
+    public_record["lark_memory_core"] = build_lark_memory_core_model_capabilities(model_record)
     return public_record
 
 
-def build_ruyi_model_capabilities(model_record: Dict[str, Any]) -> Dict[str, Any]:
+def build_lark_memory_core_model_capabilities(model_record: Dict[str, Any]) -> Dict[str, Any]:
     policy = ModelServingPolicy.from_payload(model_record.get("_serving_policy"))
     return {
         "api_mode": policy.api_mode,

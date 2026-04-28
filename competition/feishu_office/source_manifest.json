@@ -3,23 +3,23 @@
     {
       "id": "repo_readme",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
-      "title": "Ruyi Serving README",
+      "category": "lark_memory_core_docs",
+      "title": "LarkMemoryCore README",
       "path": "README.md",
       "license": "Apache-2.0"
     },
     {
       "id": "repo_contributing",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
-      "title": "Ruyi Serving CONTRIBUTING",
+      "category": "lark_memory_core_docs",
+      "title": "LarkMemoryCore CONTRIBUTING",
       "path": "CONTRIBUTING.md",
       "license": "Apache-2.0"
     },
     {
       "id": "repo_validation_gates",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "Validation Gates",
       "path": "docs/validation-gates.md",
       "license": "Apache-2.0"
@@ -27,7 +27,7 @@
     {
       "id": "repo_feishu_runbook",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "OpenClaw Feishu Runbook",
       "path": "docs/openclaw-feishu-runbook.md",
       "license": "Apache-2.0"
@@ -35,7 +35,7 @@
     {
       "id": "repo_feishu_acceptance_matrix",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "OpenClaw Feishu Acceptance Matrix",
       "path": "docs/openclaw-feishu-acceptance-matrix.md",
       "license": "Apache-2.0"
@@ -43,7 +43,7 @@
     {
       "id": "repo_feishu_log_checks",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "OpenClaw Feishu Log Checks",
       "path": "docs/openclaw-feishu-log-checks.md",
       "license": "Apache-2.0"
@@ -51,7 +51,7 @@
     {
       "id": "repo_feishu_verification",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "OpenClaw Feishu Verification Note 2026-04-13",
       "path": "docs/openclaw-feishu-verification-note-2026-04-13.md",
       "license": "Apache-2.0"
@@ -59,7 +59,7 @@
     {
       "id": "repo_openclaw_config",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "OpenClaw Config Example",
       "path": "examples/openclaw_config.jsonc",
       "license": "Apache-2.0"
@@ -67,7 +67,7 @@
     {
       "id": "repo_real_benchmark",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "Real Benchmark Runner",
       "path": "benchmarks/real_inference_benchmark.py",
       "license": "Apache-2.0"
@@ -75,7 +75,7 @@
     {
       "id": "repo_real_dataset",
       "kind": "repo_markdown",
-      "category": "ruyi_docs",
+      "category": "lark_memory_core_docs",
       "title": "Real Dataset Samples",
       "path": "tests/real_data/huangyiheng_2026_02_real.jsonl",
       "license": "Apache-2.0"

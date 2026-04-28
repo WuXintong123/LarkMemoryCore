@@ -16,6 +16,7 @@ dist/
 *.a
 *.so
 *.dylib
+target/
 compute_server/build/
 compute_server/cmake-build-*/
 

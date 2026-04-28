@@ -3,19 +3,19 @@
 ## Compared Models
 
 - baseline: `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B`
-- tuned: `ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice`
+- tuned: `lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice`
 
 ## Evaluation Path
 
 The comparison script is:
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
 python3 competition/feishu_office/evaluate_models.py \
   --base-url http://127.0.0.1:18100 \
-  --api-key "$RUYI_API_KEY" \
+  --api-key "$LARK_MEMORY_CORE_API_KEY" \
   --baseline-model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B \
-  --tuned-model ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice \
+  --tuned-model lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice \
   --test-file competition/feishu_office/data/test.jsonl \
   --sample-count 3 \
   --max-tokens 96 \
@@ -58,7 +58,7 @@ Observed metrics:
 | Model | Success / Failure | Avg latency (ms) | Avg format compliance | Avg char F1 |
 | --- | ---: | ---: | ---: | ---: |
 | `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B` | `3 / 0` | `151614.08` | `0.0` | `0.1802` |
-| `ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice` | `3 / 0` | `6313.85` | `0.0` | `0.0787` |
+| `lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice` | `3 / 0` | `6313.85` | `0.0` | `0.0787` |
 
 Interpretation:
 
@@ -76,7 +76,7 @@ Executed with `BENCHMARK_MAX_SAMPLES=1` against the same isolated runtime.
 | Model | Latency avg (ms) | QPS | Generated tokens / second |
 | --- | ---: | ---: | ---: |
 | `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B` | `75559.45` | `0.013` | `0.040` |
-| `ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice` | `4114.18` | `0.243` | `15.556` |
+| `lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice` | `4114.18` | `0.243` | `15.556` |
 
 ### Qualitative Office-Prompt Comparison
 

@@ -1,8 +1,8 @@
 # Contributing / 参与贡献
 
-Thanks for contributing to `ruyi-serving`.
+Thanks for contributing to `lark-memory-core`.
 
-感谢你为 `ruyi-serving` 做贡献。
+感谢你为 `lark-memory-core` 做贡献。
 
 ## Current Supported Scope / 当前支持范围
 
@@ -78,7 +78,7 @@ intact and the computed result returned through `api_server`, enable the trace
 switch on both services:
 
 ```bash
-export RUYI_DEBUG_PROMPT_IO=1
+export LARK_MEMORY_CORE_DEBUG_PROMPT_IO=1
 ```
 
 Use a unique sentinel prompt such as `TRACE_SENTINEL_<timestamp>_<random>`, then

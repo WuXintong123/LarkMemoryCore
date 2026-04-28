@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ -n "${RUYI_PYTHON_BIN:-}" ]]; then
-  printf '%s\n' "${RUYI_PYTHON_BIN}"
+if [[ -n "${LARK_MEMORY_CORE_PYTHON_BIN:-}" ]]; then
+  printf '%s\n' "${LARK_MEMORY_CORE_PYTHON_BIN}"
   exit 0
 fi
 
@@ -21,5 +21,5 @@ PY
   fi
 done
 
-echo "[error] Python 3.10+ interpreter not found. Set RUYI_PYTHON_BIN to a supported interpreter." >&2
+echo "[error] Python 3.10+ interpreter not found. Set LARK_MEMORY_CORE_PYTHON_BIN to a supported interpreter." >&2
 exit 1

@@ -44,8 +44,8 @@
       }
     },
     {
-      "id": "ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice",
-      "owned_by": "ruyi-office",
+      "id": "lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice",
+      "owned_by": "lark-office",
       "created": 1776441600,
       "serving": {
         "api_mode": "both",
@@ -58,7 +58,7 @@
         "allow_anonymous_models": false
       },
       "tool": {
-        "cli_path": "/home/huangyiheng/.venvs/ruyi-feishu-office/bin/python",
+        "cli_path": "/home/huangyiheng/.venvs/lark-memory-feishu-office/bin/python",
         "numactl_nodes": "",
         "taskset_cpus": "",
         "extra_args": "/path/to/competition/feishu_office/runtime/feishu_office_hf_cli.py --daemon-host 127.0.0.1 --daemon-port 19600"

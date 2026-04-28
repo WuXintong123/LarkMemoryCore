@@ -45,7 +45,7 @@ async def test_root_landing_payload_exposes_discovery_links():
 
     assert response.status_code == 200
     body = response.json()
-    assert body["service"] == "ruyi-serving"
+    assert body["service"] == "lark-memory-core"
     assert body["docs"]["openapi"].endswith("/openapi.json")
     assert "/v1/models" in body["endpoints"]["public"]
     assert "/v1/admin/reload-models" in body["endpoints"]["admin"]
@@ -70,12 +70,12 @@ async def test_request_id_header_is_returned_for_success_and_error():
 
 
 @pytest.mark.asyncio
-async def test_model_detail_exposes_ruyi_capabilities():
+async def test_model_detail_exposes_lark_memory_core_capabilities():
     fake_model = {
         "id": "model-a",
         "object": "model",
         "created": 1,
-        "owned_by": "ruyi",
+        "owned_by": "lark_memory_core",
         "_ready": True,
         "_serving_policy": {
             "api_mode": "chat",
@@ -98,17 +98,17 @@ async def test_model_detail_exposes_ruyi_capabilities():
 
     assert response.status_code == 200
     body = response.json()
-    assert body["ruyi"]["api_mode"] == "chat"
-    assert body["ruyi"]["ready"] is True
-    assert body["ruyi"]["supported_endpoints"] == ["/v1/chat/completions"]
-    assert "frequency_penalty" in body["ruyi"]["unsupported_parameters"]
+    assert body["lark_memory_core"]["api_mode"] == "chat"
+    assert body["lark_memory_core"]["ready"] is True
+    assert body["lark_memory_core"]["supported_endpoints"] == ["/v1/chat/completions"]
+    assert "frequency_penalty" in body["lark_memory_core"]["unsupported_parameters"]
 
 
 @pytest.mark.asyncio
 async def test_reload_models_invalidates_cache_and_returns_public_models():
     original_cache = dict(main_module._model_cache)
     main_module._model_cache["models"] = [
-        {"id": "stale-model", "object": "model", "created": 1, "owned_by": "ruyi"}
+        {"id": "stale-model", "object": "model", "created": 1, "owned_by": "lark_memory_core"}
     ]
     main_module._model_cache["expires_at"] = 9999999999.0
     fresh_model = SimpleNamespace(
@@ -207,5 +207,5 @@ async def test_metrics_endpoint_returns_prometheus_text():
 
     assert response.status_code == 200
     assert "text/plain" in response.headers["content-type"]
-    assert "ruyi_total_requests 10" in response.text
-    assert 'ruyi_model_request_count{model="model-a"} 4' in response.text
+    assert "lark_memory_core_total_requests 10" in response.text
+    assert 'lark_memory_core_model_request_count{model="model-a"} 4' in response.text

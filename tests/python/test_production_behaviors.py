@@ -60,7 +60,7 @@ def _policy_record(**policy_overrides):
         "id": "test-model",
         "object": "model",
         "created": 1,
-        "owned_by": "ruyi",
+        "owned_by": "lark_memory_core",
         "_serving_policy": policy,
     }
 
@@ -183,7 +183,7 @@ async def test_chat_policy_defaults_max_tokens_and_returns_partial_header():
             )
 
     assert response.status_code == 200
-    assert response.headers["X-Ruyi-Partial-Reason"] == "watchdog_timeout"
+    assert response.headers["X-LarkMemoryCore-Partial-Reason"] == "watchdog_timeout"
     assert response.json()["choices"][0]["finish_reason"] == "length"
 
 
@@ -363,7 +363,7 @@ async def test_chat_debug_trace_logs_prompt_and_result_when_enabled():
         max_input_chars=8192,
     )
 
-    with patch.dict(os.environ, {"RUYI_DEBUG_PROMPT_IO": "1"}, clear=False), patch(
+    with patch.dict(os.environ, {"LARK_MEMORY_CORE_DEBUG_PROMPT_IO": "1"}, clear=False), patch(
         "api_server.main.auth_manager", _disabled_auth_manager()
     ), patch("api_server.main._ensure_model_available"), patch(
         "api_server.main._get_model_record", return_value=policy_record
@@ -442,7 +442,7 @@ async def test_chat_debug_trace_cleans_real_feishu_transport_envelope_from_conte
         max_input_chars=8192,
     )
 
-    with patch.dict(os.environ, {"RUYI_DEBUG_PROMPT_IO": "1"}, clear=False), patch(
+    with patch.dict(os.environ, {"LARK_MEMORY_CORE_DEBUG_PROMPT_IO": "1"}, clear=False), patch(
         "api_server.main.auth_manager", _disabled_auth_manager()
     ), patch("api_server.main._ensure_model_available"), patch(
         "api_server.main._get_model_record", return_value=policy_record
@@ -542,7 +542,7 @@ async def test_feishu_group_at_bot_two_turn_chat_uses_latest_user_only():
                         {
                             "role": "user",
                             "content": _wrapped_feishu_user_text(
-                                "@Ruyi Test Bot group round-1",
+                                "@LarkMemoryCore Test Bot group round-1",
                                 message_id="om_group_1",
                                 group=True,
                                 mentioned=True,
@@ -552,7 +552,7 @@ async def test_feishu_group_at_bot_two_turn_chat_uses_latest_user_only():
                         {
                             "role": "user",
                             "content": _wrapped_feishu_user_text(
-                                "Ruyi Test Bot group round-2 latest",
+                                "LarkMemoryCore Test Bot group round-2 latest",
                                 message_id="om_group_2",
                                 group=True,
                                 mentioned=True,
@@ -565,7 +565,7 @@ async def test_feishu_group_at_bot_two_turn_chat_uses_latest_user_only():
                         "source": "openclaw-feishu",
                         "chat_type": "group",
                         "conversation_id": "oc-feishu-group-001",
-                        "mentions": ["ruyi-bot"],
+                        "mentions": ["lark-memory-core-bot"],
                     },
                     "openclaw": {
                         "channel": "feishu",
@@ -672,7 +672,7 @@ async def test_feishu_stream_request_returns_sse_and_uses_latest_user_prompt():
                         {
                             "role": "user",
                             "content": _wrapped_feishu_user_text(
-                                "@Ruyi Test Bot stream round-1",
+                                "@LarkMemoryCore Test Bot stream round-1",
                                 message_id="om_stream_1",
                                 group=True,
                                 mentioned=True,
@@ -921,7 +921,7 @@ async def test_feishu_wrapper_cleanup_falls_back_when_cleaned_question_is_empty(
                         {
                             "role": "user",
                             "content": _wrapped_feishu_user_text(
-                                "@Ruyi Test Bot",
+                                "@LarkMemoryCore Test Bot",
                                 message_id="om_empty_1",
                                 group=True,
                                 mentioned=True,

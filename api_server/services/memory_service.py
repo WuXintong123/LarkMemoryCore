@@ -80,6 +80,16 @@ def _parse_iso_or_now(value: Optional[str]) -> str:
     return parsed.replace(microsecond=0).isoformat()
 
 
+def _iso_datetime_sort_key(value: str) -> datetime:
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
 def _normalize_scope(value: Optional[str], fallback: str) -> str:
     normalized = (value or "").strip()
     return normalized or fallback
@@ -439,37 +449,16 @@ class DecisionMemoryEngine:
                     ignored_reason="no_decision_signal",
                 )
 
-            active_rows = conn.execute(
-                """
-                SELECT id, version FROM decision_memories
-                WHERE memory_key = ? AND status = ?
-                ORDER BY version DESC
-                """,
-                (draft.memory_key, DECISION_STATUS_ACTIVE),
-            ).fetchall()
-            next_version = 1
-            superseded_ids: List[str] = []
-            if active_rows:
-                next_version = max(int(row["version"]) for row in active_rows) + 1
-                superseded_ids = [str(row["id"]) for row in active_rows]
-                conn.execute(
+            previous_active_ids = {
+                str(row["id"])
+                for row in conn.execute(
                     """
-                    UPDATE decision_memories
-                    SET status = ?, updated_at = ?
+                    SELECT id FROM decision_memories
                     WHERE memory_key = ? AND status = ?
                     """,
-                    (
-                        DECISION_STATUS_SUPERSEDED,
-                        _utc_now_iso(),
-                        draft.memory_key,
-                        DECISION_STATUS_ACTIVE,
-                    ),
-                )
-                for memory_id in superseded_ids:
-                    conn.execute(
-                        "DELETE FROM decision_memory_fts WHERE memory_id = ?",
-                        (memory_id,),
-                    )
+                    (draft.memory_key, DECISION_STATUS_ACTIVE),
+                ).fetchall()
+            }
 
             memory_id = f"mem-{uuid.uuid4().hex[:24]}"
             source = _source_url(merged_metadata)
@@ -493,39 +482,97 @@ class DecisionMemoryEngine:
                     draft.objections,
                     draft.conclusion,
                     DECISION_STATUS_ACTIVE,
-                    next_version,
+                    1,
                     event_id,
                     source,
                     occurred_at,
                     _utc_now_iso(),
-                    superseded_ids[0] if superseded_ids else None,
+                    None,
                 ),
             )
-            conn.execute(
-                """
-                INSERT INTO decision_memory_fts (
-                    memory_id, tenant_id, project_id, conversation_id,
-                    topic, decision, reason, conclusion
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    memory_id,
-                    tenant_id,
-                    project_id,
-                    conversation_id,
-                    draft.topic,
-                    draft.decision,
-                    draft.reason,
-                    draft.conclusion,
-                ),
-            )
+            active_ids = self._reconcile_memory_key_versions(conn, draft.memory_key)
+            superseded_count = len(previous_active_ids - set(active_ids))
 
         return MemoryEventIngestResponse(
             event_id=event_id,
             created_count=1,
-            superseded_count=len(superseded_ids),
-            active_memory_ids=[memory_id],
+            superseded_count=superseded_count,
+            active_memory_ids=active_ids,
         )
+
+    def _reconcile_memory_key_versions(
+        self, conn: sqlite3.Connection, memory_key: str
+    ) -> List[str]:
+        rows = conn.execute(
+            """
+            SELECT
+                dm.id, dm.tenant_id, dm.project_id, dm.conversation_id,
+                dm.topic, dm.decision, dm.reason, dm.conclusion, dm.occurred_at,
+                me.inserted_at
+            FROM decision_memories dm
+            JOIN memory_events me ON me.id = dm.source_event_id
+            WHERE dm.memory_key = ?
+            """,
+            (memory_key,),
+        ).fetchall()
+        if not rows:
+            return []
+        ordered_rows = sorted(
+            rows,
+            key=lambda row: (
+                _iso_datetime_sort_key(str(row["occurred_at"])),
+                _iso_datetime_sort_key(str(row["inserted_at"])),
+                str(row["id"]),
+            ),
+        )
+        active_id = str(ordered_rows[-1]["id"])
+        now = _utc_now_iso()
+        previous_id: Optional[str] = None
+        for version, row in enumerate(ordered_rows, start=1):
+            memory_id = str(row["id"])
+            conn.execute(
+                """
+                UPDATE decision_memories
+                SET status = ?, version = ?, updated_at = ?, supersedes_id = ?
+                WHERE id = ?
+                """,
+                (
+                    DECISION_STATUS_ACTIVE
+                    if memory_id == active_id
+                    else DECISION_STATUS_SUPERSEDED,
+                    version,
+                    now,
+                    previous_id,
+                    memory_id,
+                ),
+            )
+            previous_id = memory_id
+
+        for row in ordered_rows:
+            conn.execute(
+                "DELETE FROM decision_memory_fts WHERE memory_id = ?",
+                (str(row["id"]),),
+            )
+        active_row = ordered_rows[-1]
+        conn.execute(
+            """
+            INSERT INTO decision_memory_fts (
+                memory_id, tenant_id, project_id, conversation_id,
+                topic, decision, reason, conclusion
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                str(active_row["id"]),
+                str(active_row["tenant_id"]),
+                str(active_row["project_id"]),
+                str(active_row["conversation_id"]),
+                str(active_row["topic"]),
+                str(active_row["decision"]),
+                str(active_row["reason"]),
+                str(active_row["conclusion"]),
+            ),
+        )
+        return [active_id]
 
     def ingest_chat_messages(
         self,
@@ -886,11 +933,40 @@ class DecisionMemoryEngine:
                 FROM retrieval_logs
                 """
             ).fetchone()
+            version_rows = conn.execute(
+                """
+                SELECT dm.memory_key, dm.id, dm.status, dm.occurred_at, me.inserted_at
+                FROM decision_memories dm
+                JOIN memory_events me ON me.id = dm.source_event_id
+                """
+            ).fetchall()
         retrieval_count = int(retrieval_row["retrieval_count"] or 0)
         retrieval_hit_count = int(retrieval_row["hit_count"] or 0)
         hit_rate = retrieval_hit_count / retrieval_count if retrieval_count else 0.0
-        total_versions = active_count + superseded_count
-        version_correctness = active_count / max(1, active_count) if total_versions else 1.0
+        rows_by_key: Dict[str, List[sqlite3.Row]] = {}
+        for row in version_rows:
+            rows_by_key.setdefault(str(row["memory_key"]), []).append(row)
+        correct_version_keys = 0
+        for rows in rows_by_key.values():
+            active_rows = [
+                row for row in rows if str(row["status"]) == DECISION_STATUS_ACTIVE
+            ]
+            latest_row = max(
+                rows,
+                key=lambda row: (
+                    _iso_datetime_sort_key(str(row["occurred_at"])),
+                    _iso_datetime_sort_key(str(row["inserted_at"])),
+                    str(row["id"]),
+                ),
+            )
+            if (
+                len(active_rows) == 1
+                and str(active_rows[0]["id"]) == str(latest_row["id"])
+            ):
+                correct_version_keys += 1
+        version_correctness = (
+            correct_version_keys / len(rows_by_key) if rows_by_key else 1.0
+        )
         return {
             "enabled": True,
             "event_count": event_count,

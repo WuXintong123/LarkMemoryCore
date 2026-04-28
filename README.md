@@ -2,7 +2,7 @@
 
 OpenAI API-compatible serving built with FastAPI + gRPC.
 
-LarkMemoryCore 是一个面向飞书项目决策记忆场景的 OpenAI API 兼容推理服务，采用 FastAPI + gRPC 双进程架构。
+LarkMemoryCore 是一个面向飞书项目决策记忆和真实模型后端的 OpenAI API 兼容推理服务，采用 FastAPI + gRPC 双进程架构。
 
 ## What This Repo Expects
 
@@ -220,7 +220,7 @@ That means direct CLI / direct gRPC / API result comparisons must use the same f
 
 ## Real Model Compiler Validation
 
-Before treating `ruyi-serving` as validated against a real model backend, compile and direct-test the actual model CLI that the runtime will launch.
+Before treating `lark-memory-core` as validated against a real model backend, compile and direct-test the actual model CLI that the runtime will launch.
 
 For the default Buddy DeepSeek R1 path:
 
@@ -236,7 +236,7 @@ Then ensure the active `models.json` points `tool.cli_path` at that executable.
 
 These gates require:
 
-- a running `ruyi-serving` instance
+- a running `lark-memory-core` instance
 - a real model binary
 - a real dataset
 - a client API key if auth is enabled
@@ -244,11 +244,11 @@ These gates require:
 Example:
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
 export REAL_INTEGRATION_MODEL="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
-export REAL_DATASET_PATH="/home/huangyiheng/src/ruyi-serving-feishu-live-20260416/tests/real_data/huangyiheng_2026_02_real.jsonl"
+export REAL_DATASET_PATH="/home/huangyiheng/src/lark-memory-core-feishu-live-20260416/tests/real_data/huangyiheng_2026_02_real.jsonl"
 export REAL_INTEGRATION_BASE_URL="http://127.0.0.1:18100"
-export REAL_INTEGRATION_API_KEY="$(cat /home/huangyiheng/src/ruyi-serving-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)"
+export REAL_INTEGRATION_API_KEY="$(cat /home/huangyiheng/src/lark-memory-core-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)"
 export REAL_INTEGRATION_MAX_SAMPLES=1
 export REAL_INTEGRATION_TIMEOUT_S=180
 ```
@@ -283,7 +283,7 @@ That keeps configure, build, and unit-test behavior aligned across local develop
 
 - [`examples/openai_sdk_compat.py`](examples/openai_sdk_compat.py)
 - [`examples/javascript/openai_sdk_compat.mjs`](examples/javascript/openai_sdk_compat.mjs)
-- [`examples/postman/ruyi-serving.postman_collection.json`](examples/postman/ruyi-serving.postman_collection.json)
+- [`examples/postman/lark-memory-core.postman_collection.json`](examples/postman/lark-memory-core.postman_collection.json)
 
 ## Contributing, Security, and License
 

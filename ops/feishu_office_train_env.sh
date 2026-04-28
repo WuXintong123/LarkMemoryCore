@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VENV_PATH="${FEISHU_OFFICE_TRAIN_VENV:-${HOME}/.venvs/ruyi-feishu-office}"
+VENV_PATH="${FEISHU_OFFICE_TRAIN_VENV:-${HOME}/.venvs/lark-memory-feishu-office}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 
 if [[ ! -d "${VENV_PATH}" ]]; then

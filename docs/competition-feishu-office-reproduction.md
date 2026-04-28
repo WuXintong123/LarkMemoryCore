@@ -31,9 +31,9 @@ ssh buddy-ascend
 Define the exact paths once:
 
 ```bash
-export REPO_ROOT=/home/huangyiheng/src/ruyi-serving-feishu-live-20260416
+export REPO_ROOT=/home/huangyiheng/src/lark-memory-core-feishu-live-20260416
 export BUDDY_MLIR_ROOT=/home/huangyiheng/buddy-mlir
-export TRAIN_VENV=$HOME/.venvs/ruyi-feishu-office
+export TRAIN_VENV=$HOME/.venvs/lark-memory-feishu-office
 export OPENCLAW_ENV=$HOME/.openclaw/.env
 export OPENCLAW_BIN=$HOME/.nvm/versions/node/v22.22.2/bin/openclaw
 ```
@@ -113,7 +113,7 @@ cd "$REPO_ROOT"
 
 Expected result:
 
-- the venv exists at `$HOME/.venvs/ruyi-feishu-office`
+- the venv exists at `$HOME/.venvs/lark-memory-feishu-office`
 - the script prints:
   - `torch 2.5.1+cu121`
   - `cuda_available True`
@@ -155,9 +155,9 @@ cd "$REPO_ROOT"
 Export the runtime values used by all later commands:
 
 ```bash
-export RUYI_API_KEY=$(cat "$REPO_ROOT/.run/feishu-office-competition/runtime/api_key.txt")
-export RUYI_FEISHU_API_LOG_PATH=$REPO_ROOT/.run/feishu-office-competition/logs/api.log
-export RUYI_FEISHU_COMPUTE_LOG_PATH=$REPO_ROOT/.run/feishu-office-competition/logs/compute.log
+export LARK_MEMORY_CORE_API_KEY=$(cat "$REPO_ROOT/.run/feishu-office-competition/runtime/api_key.txt")
+export LARK_MEMORY_CORE_FEISHU_API_LOG_PATH=$REPO_ROOT/.run/feishu-office-competition/logs/api.log
+export LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH=$REPO_ROOT/.run/feishu-office-competition/logs/compute.log
 ```
 
 Verify health:
@@ -165,7 +165,7 @@ Verify health:
 ```bash
 curl -fsS http://127.0.0.1:18100/health
 curl -fsS http://127.0.0.1:18100/ready
-curl -fsS -H "Authorization: Bearer $RUYI_API_KEY" http://127.0.0.1:18100/v1/models
+curl -fsS -H "Authorization: Bearer $LARK_MEMORY_CORE_API_KEY" http://127.0.0.1:18100/v1/models
 ```
 
 Expected result:
@@ -173,7 +173,7 @@ Expected result:
 - `health` returns `{"status":"healthy"}`
 - `v1/models` lists both:
   - `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B`
-  - `ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice`
+  - `lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice`
 
 ## 7. Real Integration
 
@@ -189,7 +189,7 @@ Baseline:
 cd "$REPO_ROOT"
 export REAL_DATASET_PATH=$REPO_ROOT/tests/real_data/huangyiheng_2026_02_real.jsonl
 export REAL_INTEGRATION_BASE_URL=http://127.0.0.1:18100
-export REAL_INTEGRATION_API_KEY=$RUYI_API_KEY
+export REAL_INTEGRATION_API_KEY=$LARK_MEMORY_CORE_API_KEY
 export REAL_INTEGRATION_MAX_SAMPLES=1
 export REAL_INTEGRATION_TIMEOUT_S=180
 export REAL_INTEGRATION_MODEL=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
@@ -202,10 +202,10 @@ Tuned:
 cd "$REPO_ROOT"
 export REAL_DATASET_PATH=$REPO_ROOT/tests/real_data/huangyiheng_2026_02_real.jsonl
 export REAL_INTEGRATION_BASE_URL=http://127.0.0.1:18100
-export REAL_INTEGRATION_API_KEY=$RUYI_API_KEY
+export REAL_INTEGRATION_API_KEY=$LARK_MEMORY_CORE_API_KEY
 export REAL_INTEGRATION_MAX_SAMPLES=1
 export REAL_INTEGRATION_TIMEOUT_S=180
-export REAL_INTEGRATION_MODEL=ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice
+export REAL_INTEGRATION_MODEL=lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice
 python3 -m pytest -q -m real_integration tests/integration_real/test_real_dataset_inference.py --maxfail=1
 ```
 
@@ -223,7 +223,7 @@ Baseline:
 cd "$REPO_ROOT"
 export REAL_DATASET_PATH=$REPO_ROOT/tests/real_data/huangyiheng_2026_02_real.jsonl
 export REAL_INTEGRATION_BASE_URL=http://127.0.0.1:18100
-export REAL_INTEGRATION_API_KEY=$RUYI_API_KEY
+export REAL_INTEGRATION_API_KEY=$LARK_MEMORY_CORE_API_KEY
 export BENCHMARK_MAX_SAMPLES=1
 export REAL_INTEGRATION_MODEL=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
 python3 benchmarks/real_inference_benchmark.py
@@ -235,9 +235,9 @@ Tuned:
 cd "$REPO_ROOT"
 export REAL_DATASET_PATH=$REPO_ROOT/tests/real_data/huangyiheng_2026_02_real.jsonl
 export REAL_INTEGRATION_BASE_URL=http://127.0.0.1:18100
-export REAL_INTEGRATION_API_KEY=$RUYI_API_KEY
+export REAL_INTEGRATION_API_KEY=$LARK_MEMORY_CORE_API_KEY
 export BENCHMARK_MAX_SAMPLES=1
-export REAL_INTEGRATION_MODEL=ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice
+export REAL_INTEGRATION_MODEL=lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice
 python3 benchmarks/real_inference_benchmark.py
 ```
 
@@ -254,7 +254,7 @@ Non-stream:
 
 ```bash
 source ~/.nvm/nvm.sh
-openclaw models set ruyi/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+openclaw models set lark_memory_core/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
 openclaw gateway restart
 openclaw models list
 ```
@@ -263,15 +263,15 @@ Stream:
 
 ```bash
 source ~/.nvm/nvm.sh
-openclaw models set ruyi_stream/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+openclaw models set lark_memory_stream/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
 openclaw gateway restart
 openclaw models list
 ```
 
 Expected result:
 
-- non-stream scenarios show `ruyi/... default`
-- stream scenarios show `ruyi_stream/... default`
+- non-stream scenarios show `lark_memory_core/... default`
+- stream scenarios show `lark_memory_stream/... default`
 
 ## 10. Feishu Acceptance
 
@@ -291,7 +291,7 @@ For both streaming scenarios:
 - then confirm the compute slot is idle:
 
 ```bash
-curl -fsS -H "Authorization: Bearer $RUYI_API_KEY" http://127.0.0.1:18100/v1/admin/metrics
+curl -fsS -H "Authorization: Bearer $LARK_MEMORY_CORE_API_KEY" http://127.0.0.1:18100/v1/admin/metrics
 ```
 
 Only continue when:
@@ -315,7 +315,7 @@ cd "$REPO_ROOT"
   --trace-token DM-NS-2-20260418-B
 ```
 
-Send these exact two DM messages to `Ruyi Test Bot`:
+Send these exact two DM messages to `LarkMemoryCore Test Bot`:
 
 ```text
 DM-NS-1-20260418-A 请只回复“收到”。
@@ -372,8 +372,8 @@ cd "$REPO_ROOT"
 Send these exact two group messages:
 
 ```text
-@Ruyi Test Bot GROUP-NS-1-20260418-A 请只回复“收到”。
-@Ruyi Test Bot GROUP-NS-2-20260418-B 请用一句话总结本轮需求。
+@LarkMemoryCore Test Bot GROUP-NS-1-20260418-A 请只回复“收到”。
+@LarkMemoryCore Test Bot GROUP-NS-2-20260418-B 请用一句话总结本轮需求。
 ```
 
 Verified summary path:
@@ -399,8 +399,8 @@ cd "$REPO_ROOT"
 Send these exact two group messages:
 
 ```text
-@Ruyi Test Bot GROUP-S-1-20260418-A 请只回复“收到”。
-@Ruyi Test Bot GROUP-S-2-20260418-B 请用一句话总结本轮需求。
+@LarkMemoryCore Test Bot GROUP-S-1-20260418-A 请只回复“收到”。
+@LarkMemoryCore Test Bot GROUP-S-2-20260418-B 请用一句话总结本轮需求。
 ```
 
 Verified summary path:

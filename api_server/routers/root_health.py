@@ -27,7 +27,7 @@ async def root(request: Request):
     )
     return {
         "status": "ok",
-        "service": "ruyi-serving",
+        "service": "lark-memory-core",
         "version": main_module.APP_VERSION,
         "docs": {
             "openapi": f"{base_url}{main_module.OPENAPI_SCHEMA_PATH}",

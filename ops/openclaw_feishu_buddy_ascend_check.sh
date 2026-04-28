@@ -13,14 +13,14 @@ Usage:
     --trace-token <round2-token>
 
 Optional environment variables:
-  RUYI_FEISHU_API_BASE_URL      default: http://127.0.0.1:18100
-  RUYI_FEISHU_LOG_SINCE         default: 15 minutes ago
-  RUYI_FEISHU_REPORT_DIR        default: reports/openclaw-feishu-<timestamp>-<scenario>
-  RUYI_FEISHU_API_LOG_PATH      explicit API log file for manual isolated process
-  RUYI_FEISHU_COMPUTE_LOG_PATH  explicit compute log file for manual isolated process
-  RUYI_FEISHU_API_KEY           bearer token used for /v1/models
-  RUYI_FEISHU_API_KEY_FILE      bearer token file used for /v1/models
-  RUYI_FEISHU_SKIP_PROMPT=1     skip the interactive "press Enter after sending" prompt
+  LARK_MEMORY_CORE_FEISHU_API_BASE_URL      default: http://127.0.0.1:18100
+  LARK_MEMORY_CORE_FEISHU_LOG_SINCE         default: 15 minutes ago
+  LARK_MEMORY_CORE_FEISHU_REPORT_DIR        default: reports/openclaw-feishu-<timestamp>-<scenario>
+  LARK_MEMORY_CORE_FEISHU_API_LOG_PATH      explicit API log file for manual isolated process
+  LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH  explicit compute log file for manual isolated process
+  LARK_MEMORY_CORE_FEISHU_API_KEY           bearer token used for /v1/models
+  LARK_MEMORY_CORE_FEISHU_API_KEY_FILE      bearer token file used for /v1/models
+  LARK_MEMORY_CORE_FEISHU_SKIP_PROMPT=1     skip the interactive "press Enter after sending" prompt
 
 This script does not send Feishu messages. It performs service checks, captures
 logs, asserts trace evidence, and writes a summary for the given scenario.
@@ -64,13 +64,13 @@ if [[ "${#TRACE_TOKENS[@]}" -ne 2 ]]; then
   exit 1
 fi
 
-API_BASE_URL="${RUYI_FEISHU_API_BASE_URL:-http://127.0.0.1:18100}"
-LOG_SINCE="${RUYI_FEISHU_LOG_SINCE:-15 minutes ago}"
-REPORT_DIR="${RUYI_FEISHU_REPORT_DIR:-${REPO_ROOT}/reports/openclaw-feishu-$(date +%Y%m%d-%H%M%S)-${SCENARIO}}"
-API_LOG_PATH="${RUYI_FEISHU_API_LOG_PATH:-}"
-COMPUTE_LOG_PATH="${RUYI_FEISHU_COMPUTE_LOG_PATH:-}"
-API_KEY="${RUYI_FEISHU_API_KEY:-}"
-API_KEY_FILE="${RUYI_FEISHU_API_KEY_FILE:-$HOME/.config/ruyi-serving/credentials/client_api_key.txt}"
+API_BASE_URL="${LARK_MEMORY_CORE_FEISHU_API_BASE_URL:-http://127.0.0.1:18100}"
+LOG_SINCE="${LARK_MEMORY_CORE_FEISHU_LOG_SINCE:-15 minutes ago}"
+REPORT_DIR="${LARK_MEMORY_CORE_FEISHU_REPORT_DIR:-${REPO_ROOT}/reports/openclaw-feishu-$(date +%Y%m%d-%H%M%S)-${SCENARIO}}"
+API_LOG_PATH="${LARK_MEMORY_CORE_FEISHU_API_LOG_PATH:-}"
+COMPUTE_LOG_PATH="${LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH:-}"
+API_KEY="${LARK_MEMORY_CORE_FEISHU_API_KEY:-}"
+API_KEY_FILE="${LARK_MEMORY_CORE_FEISHU_API_KEY_FILE:-$HOME/.config/lark-memory-core/credentials/client_api_key.txt}"
 
 mkdir -p "${REPORT_DIR}"
 
@@ -112,7 +112,7 @@ curl -fsS --max-time 10 "${API_BASE_URL}/ready" > "${READY_PATH}"
 curl -fsS --max-time 10 "${AUTH_ARGS[@]}" "${API_BASE_URL}/v1/models" > "${MODELS_PATH}"
 
 if systemctl --user show-environment >/dev/null 2>&1; then
-  mapfile -t MANAGED_UNITS < <(ruyi_managed_units)
+  mapfile -t MANAGED_UNITS < <(lark_memory_core_managed_units)
   if [[ "${#MANAGED_UNITS[@]}" -gt 0 ]]; then
     systemctl --user --no-pager --full status "${MANAGED_UNITS[@]}" > "${UNITS_PATH}" || true
   fi
@@ -123,7 +123,7 @@ echo "[info] trace_token_round_1=${TRACE_TOKENS[0]}" >&2
 echo "[info] trace_token_round_2=${TRACE_TOKENS[1]}" >&2
 echo "[info] report_dir=${REPORT_DIR}" >&2
 
-if [[ "${RUYI_FEISHU_SKIP_PROMPT:-0}" != "1" && -t 0 ]]; then
+if [[ "${LARK_MEMORY_CORE_FEISHU_SKIP_PROMPT:-0}" != "1" && -t 0 ]]; then
   echo "[action] 请现在在 Feishu 中完成两轮消息发送，然后按回车继续日志核对。" >&2
   read -r _
 fi
@@ -141,7 +141,7 @@ capture_logs() {
   fi
 
   if systemctl --user show-environment >/dev/null 2>&1; then
-    mapfile -t MANAGED_UNITS < <(ruyi_managed_units)
+    mapfile -t MANAGED_UNITS < <(lark_memory_core_managed_units)
     if [[ "${#MANAGED_UNITS[@]}" -gt 0 ]] && journalctl --user -u "${MANAGED_UNITS[0]}" --no-pager -n 1 >/dev/null 2>&1; then
       JOURNAL_ARGS=()
       for unit in "${MANAGED_UNITS[@]}"; do
@@ -152,7 +152,7 @@ capture_logs() {
     fi
   fi
 
-  mapfile -t RAW_LOG_PATHS < <(ruyi_log_paths)
+  mapfile -t RAW_LOG_PATHS < <(lark_memory_core_log_paths)
   : > "${LOGS_PATH}"
   for raw_path in "${RAW_LOG_PATHS[@]}"; do
     path="${raw_path//%h/$HOME}"
@@ -172,7 +172,7 @@ HOST_INFO_PATH="${HOST_INFO_PATH}" \
 LOGS_PATH="${LOGS_PATH}" \
 SUMMARY_JSON_PATH="${SUMMARY_JSON_PATH}" \
 SUMMARY_MD_PATH="${SUMMARY_MD_PATH}" \
-"${RUYI_PYTHON_BIN}" - <<'PY'
+"${LARK_MEMORY_CORE_PYTHON_BIN}" - <<'PY'
 import json
 import os
 from pathlib import Path

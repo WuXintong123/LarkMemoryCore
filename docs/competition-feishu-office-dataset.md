@@ -15,7 +15,7 @@ competition track. The task design is fixed to five office-facing capabilities:
 
 Only real public materials are used:
 
-1. Existing repository documentation and validation material from `ruyi-serving`
+1. Existing repository documentation and validation material from `lark-memory-core`
 2. Official Feishu public product / help content from `https://www.feishu.cn/content/...`
 3. Public office-style notices from the National Bureau of Statistics notice listing
 
@@ -87,7 +87,7 @@ The generated `quality_report.json` also records:
 ## Rebuild
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
 python3 -m competition.feishu_office.build_dataset
 python3 -m competition.feishu_office.validate_dataset
 ```

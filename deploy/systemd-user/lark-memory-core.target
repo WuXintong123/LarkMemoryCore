@@ -1,0 +1,4 @@
+[Unit]
+Description=LarkMemoryCore Stack
+Wants=lark-memory-core-compute.service lark-memory-core-api.service lark-memory-core-proxy.service
+After=lark-memory-core-compute.service lark-memory-core-api.service lark-memory-core-proxy.service

@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Ruyi Serving",
-    "_postman_id": "6f6f6c11-1f3e-4c1d-8f20-ruyi-serving",
+    "name": "LarkMemoryCore",
+    "_postman_id": "6f6f6c11-1f3e-4c1d-8f20-lark-memory-core",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

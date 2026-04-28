@@ -113,9 +113,9 @@ API_BIND_HOST = os.getenv("API_BIND_HOST", "127.0.0.1")
 API_BIND_PORT = int(os.getenv("API_BIND_PORT", os.getenv("API_PORT", "8000")))
 CORS_ALLOW_ORIGINS = _parse_cors_allow_origins(os.getenv("CORS_ALLOW_ORIGINS", ""))
 GRACEFUL_SHUTDOWN_TIMEOUT_S = int(os.getenv("GRACEFUL_SHUTDOWN_TIMEOUT_S", "30"))
-RUYI_MEMORY_ENGINE_ENABLED = _env_bool("RUYI_MEMORY_ENGINE_ENABLED", False)
-RUYI_MEMORY_DB_PATH = os.getenv(
-    "RUYI_MEMORY_DB_PATH",
+LARK_MEMORY_CORE_MEMORY_ENGINE_ENABLED = _env_bool("LARK_MEMORY_CORE_MEMORY_ENGINE_ENABLED", False)
+LARK_MEMORY_CORE_MEMORY_DB_PATH = os.getenv(
+    "LARK_MEMORY_CORE_MEMORY_DB_PATH",
     os.path.join(".run", "memory-engine", "decision_memory.sqlite3"),
 )
-RUYI_MEMORY_MAX_CARDS = _safe_env_int("RUYI_MEMORY_MAX_CARDS", 3, min_value=1)
+LARK_MEMORY_CORE_MEMORY_MAX_CARDS = _safe_env_int("LARK_MEMORY_CORE_MEMORY_MAX_CARDS", 3, min_value=1)

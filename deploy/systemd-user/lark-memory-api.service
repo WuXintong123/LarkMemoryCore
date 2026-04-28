@@ -1,0 +1,21 @@
+[Unit]
+Description=LarkMemoryCore API Server
+After=network-online.target lark-memory-core-compute.service
+Wants=network-online.target
+Requires=lark-memory-core-compute.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/lark-memory-core
+Environment=HOME=%h
+EnvironmentFile=%h/lark-memory-core/.env
+ExecStart=/bin/bash -lc 'exec python3 -m api_server.main'
+Restart=always
+RestartSec=5
+TimeoutStopSec=40
+KillMode=mixed
+StandardOutput=append:%h/lark-memory-core/.run/systemd-api.log
+StandardError=append:%h/lark-memory-core/.run/systemd-api.log
+
+[Install]
+WantedBy=default.target

@@ -90,7 +90,7 @@ def _policy_record(**policy_overrides):
         "id": "test-model",
         "object": "model",
         "created": 1,
-        "owned_by": "ruyi",
+        "owned_by": "lark_memory_core",
         "_serving_policy": policy,
     }
 
@@ -209,6 +209,62 @@ def test_decision_memory_keeps_latest_real_conflicting_runtime_value(tmp_path):
         query="竞赛运行时 request_timeout_ms 使用多少？",
         limit=5,
         request_id="req-memory-update",
+    )
+
+    assert results.hit_count == 1
+    assert "300000" in results.cards[0].decision
+    assert results.cards[0].source_url == "repo://ops/feishu_office_competition_common.sh"
+    assert results.cards[0].version == 2
+    report = engine.report()
+    assert report["superseded_memory_count"] == 1
+    assert report["active_memory_count"] == 1
+    assert report["version_correctness"] == 1.0
+
+
+def test_decision_memory_uses_event_time_when_conflicting_events_arrive_out_of_order(tmp_path):
+    from api_server.services.memory_service import DecisionMemoryEngine, MemoryEventInput
+
+    engine = DecisionMemoryEngine(
+        db_path=str(tmp_path / "memory.sqlite3"),
+        enabled=True,
+        max_cards=3,
+    )
+    newer = engine.ingest_event(
+        MemoryEventInput(
+            source="document",
+            tenant_id="tenant-real",
+            project_id="feishu-office",
+            conversation_id="oc_group_trace_room",
+            occurred_at="2026-04-18T10:00:00+08:00",
+            raw_text=_real_runtime_timeout_decision(),
+            topic="request_timeout_ms",
+            metadata={"source_url": "repo://ops/feishu_office_competition_common.sh"},
+        )
+    )
+    late_old = engine.ingest_event(
+        MemoryEventInput(
+            source="document",
+            tenant_id="tenant-real",
+            project_id="feishu-office",
+            conversation_id="oc_group_trace_room",
+            occurred_at="2026-04-13T10:00:00+08:00",
+            raw_text=_real_runbook_timeout_decision(),
+            topic="request_timeout_ms",
+            metadata={"source_url": "repo://docs/openclaw-feishu-runbook.md"},
+        )
+    )
+
+    assert newer.created_count == 1
+    assert late_old.created_count == 1
+    assert late_old.superseded_count == 0
+
+    results = engine.search(
+        tenant_id="tenant-real",
+        project_id="feishu-office",
+        conversation_id="oc_group_trace_room",
+        query="竞赛运行时 request_timeout_ms 使用多少？",
+        limit=5,
+        request_id="req-memory-update-out-of-order",
     )
 
     assert results.hit_count == 1
@@ -375,7 +431,7 @@ async def test_chat_route_injects_memory_without_storing_question_as_decision(tm
         main_module.memory_engine = original_engine
 
     assert response.status_code == 200
-    assert response.headers["X-Ruyi-Memory-Hit-Count"] == "1"
+    assert response.headers["X-LarkMemoryCore-Memory-Hit-Count"] == "1"
     assert len(captured_prompts) == 1
     assert "历史决策卡片" in captured_prompts[0]
     assert "POST /v1/chat/completions" in captured_prompts[0]

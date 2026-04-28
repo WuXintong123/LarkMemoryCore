@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ruyi-serving.local/models.schema.json",
-  "title": "Ruyi Serving Model Registry",
+  "$id": "https://lark-memory-core.local/models.schema.json",
+  "title": "LarkMemoryCore Model Registry",
   "type": "object",
   "required": [
     "models"

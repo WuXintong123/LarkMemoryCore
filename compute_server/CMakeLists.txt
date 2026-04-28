@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(CTest)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/RuyiDependencies.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/RuyiProto.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/LarkMemoryCoreDependencies.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/LarkMemoryCoreProto.cmake)
 
 add_executable(compute_server
     src/Main.cpp
@@ -37,9 +37,9 @@ if(NOT TARGET PkgConfig::PROTOBUF_PC)
     )
 endif()
 
-ruyi_target_link_grpc_and_protobuf(compute_server)
+lark_memory_core_target_link_grpc_and_protobuf(compute_server)
 
 install(TARGETS compute_server DESTINATION bin)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/RuyiTests.cmake)
-ruyi_add_compute_tests()
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/LarkMemoryCoreTests.cmake)
+lark_memory_core_add_compute_tests()

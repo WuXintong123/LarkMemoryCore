@@ -127,7 +127,7 @@ def _policy_record(**policy_overrides):
         "id": "test-model",
         "object": "model",
         "created": 1,
-        "owned_by": "ruyi",
+        "owned_by": "lark_memory_core",
         "_serving_policy": policy,
     }
 
@@ -393,7 +393,7 @@ class TestStreamChatResponseClientDisconnect:
 
         routed_backend.client.process_stream = MagicMock(return_value=_stream_events())
 
-        with patch.dict(os.environ, {"RUYI_DEBUG_PROMPT_IO": "1"}, clear=False), patch(
+        with patch.dict(os.environ, {"LARK_MEMORY_CORE_DEBUG_PROMPT_IO": "1"}, clear=False), patch(
             "api_server.main._get_model_record", return_value=_policy_record()
         ), patch("api_server.main.logger.info") as mock_logger_info:
             chunks = await _collect_stream(
@@ -783,7 +783,7 @@ class TestFeishuStreamingEndpointBehavior:
                             {
                                 "role": "user",
                                 "content": _wrapped_feishu_user_text(
-                                    "@Ruyi Test Bot dm sse round-1",
+                                    "@LarkMemoryCore Test Bot dm sse round-1",
                                     message_id="om_sse_1",
                                     group=True,
                                     mentioned=True,
@@ -921,16 +921,16 @@ class TestFeishuStreamingEndpointBehavior:
                     json={
                         "model": "test-model",
                         "messages": [
-                            {"role": "user", "content": "@ruyi-bot group err round-1"},
+                            {"role": "user", "content": "@lark-memory-core-bot group err round-1"},
                             {"role": "assistant", "content": "group err answer"},
-                            {"role": "user", "content": "@ruyi-bot group err round-2 latest"},
+                            {"role": "user", "content": "@lark-memory-core-bot group err round-2 latest"},
                         ],
                         "stream": True,
                         "metadata": {
                             "source": "openclaw-feishu",
                             "chat_type": "group",
                             "conversation_id": "oc-feishu-sse-group-001",
-                            "mentions": ["ruyi-bot"],
+                            "mentions": ["lark-memory-core-bot"],
                         },
                     },
                 ) as response:

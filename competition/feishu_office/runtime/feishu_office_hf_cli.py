@@ -21,6 +21,7 @@ def main() -> int:
     parser.add_argument("--daemon-host", default="127.0.0.1")
     parser.add_argument("--daemon-port", type=int, default=19600)
     parser.add_argument("--max-tokens", type=int, default=128)
+    parser.add_argument("--timeout-s", type=float, default=180.0)
     parser.add_argument("--ping", action="store_true")
     args = parser.parse_args()
 
@@ -31,7 +32,10 @@ def main() -> int:
         "max_tokens": args.max_tokens,
     }
 
-    with socket.create_connection((args.daemon_host, args.daemon_port), timeout=30) as sock:
+    with socket.create_connection(
+        (args.daemon_host, args.daemon_port),
+        timeout=args.timeout_s,
+    ) as sock:
         sock.sendall((json.dumps(request, ensure_ascii=False) + "\n").encode("utf-8"))
         stream = sock.makefile("rb")
         while True:
@@ -54,4 +58,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

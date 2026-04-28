@@ -9,12 +9,12 @@ The competition demo reuses the active isolated runtime shape on
 - compute: `0.0.0.0:19100`
 - tuned daemon: `127.0.0.1:19600`
 
-The legacy `~/ruyi-serving` systemd deployment is not the competition baseline.
+The legacy `~/lark-memory-core` systemd deployment is not the competition baseline.
 
 ## Start / Stop
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
 ./ops/feishu_office_competition_preflight.sh
 ./ops/feishu_office_competition_start.sh
 ./ops/feishu_office_competition_stop.sh
@@ -22,7 +22,7 @@ cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
 
 ## What The Start Script Does
 
-- resolves `RUYI_API_KEY` from `~/.openclaw/.env`
+- resolves `LARK_MEMORY_CORE_API_KEY` from `~/.openclaw/.env`
 - writes a competition-specific `models.json`
 - starts the tuned-model daemon
 - starts `compute_server`
@@ -33,12 +33,12 @@ cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
 ## Demo Checklist
 
 1. `curl http://127.0.0.1:18100/health`
-2. `curl -H "Authorization: Bearer $RUYI_API_KEY" http://127.0.0.1:18100/v1/models`
+2. `curl -H "Authorization: Bearer $LARK_MEMORY_CORE_API_KEY" http://127.0.0.1:18100/v1/models`
 3. Run real integration and small-sample benchmark
 4. Run the Feishu/OpenClaw acceptance matrix using:
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
 ./ops/openclaw_feishu_buddy_ascend_check.sh \
   --scenario dm-nonstream \
   --trace-token DM-NS-1-20260418-A \
@@ -48,8 +48,8 @@ cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
 Set the explicit competition log paths when checking the isolated runtime:
 
 ```bash
-export RUYI_FEISHU_API_LOG_PATH=.run/feishu-office-competition/logs/api.log
-export RUYI_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.log
+export LARK_MEMORY_CORE_FEISHU_API_LOG_PATH=.run/feishu-office-competition/logs/api.log
+export LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.log
 ```
 
 For the exact end-to-end commands, message texts, report directories, and the

@@ -142,7 +142,7 @@ ModelToolConfig makePythonConfig(const std::string &script) {
 } // namespace
 
 TEST(ComputeServiceImplPromptTraceTest, ProcessLogsPromptAndResultWhenEnabled) {
-  EnvGuard prompt_trace_guard("RUYI_DEBUG_PROMPT_IO", "1");
+  EnvGuard prompt_trace_guard("LARK_MEMORY_CORE_DEBUG_PROMPT_IO", "1");
   StructuredLogger::getInstance().setLevel(LogLevel::INFO);
   ModelConfigManager &mgr = ModelConfigManager::getInstance();
   clearAllModels(mgr);
@@ -185,7 +185,7 @@ TEST(ComputeServiceImplPromptTraceTest, ProcessLogsPromptAndResultWhenEnabled) {
 }
 
 TEST(ComputeServiceImplPromptTraceTest, ProcessLogsPromptAndErrorWhenEnabled) {
-  EnvGuard prompt_trace_guard("RUYI_DEBUG_PROMPT_IO", "1");
+  EnvGuard prompt_trace_guard("LARK_MEMORY_CORE_DEBUG_PROMPT_IO", "1");
   StructuredLogger::getInstance().setLevel(LogLevel::INFO);
   ModelConfigManager &mgr = ModelConfigManager::getInstance();
   clearAllModels(mgr);

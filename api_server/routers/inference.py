@@ -85,7 +85,7 @@ async def create_chat_completion(
                 project_id=memory_scope["project_id"],
                 conversation_id=memory_scope["conversation_id"],
                 query=prompt,
-                limit=main_module.RUYI_MEMORY_MAX_CARDS,
+                limit=main_module.LARK_MEMORY_CORE_MEMORY_MAX_CARDS,
                 request_id=request_id,
                 used_for_prompt=True,
             )
@@ -106,8 +106,8 @@ async def create_chat_completion(
                     injected_chars=memory_composition.injected_characters,
                 )
             memory_headers = {
-                "X-Ruyi-Memory-Hit-Count": str(memory_composition.hit_count),
-                "X-Ruyi-Memory-Ids": ",".join(memory_composition.memory_ids),
+                "X-LarkMemoryCore-Memory-Hit-Count": str(memory_composition.hit_count),
+                "X-LarkMemoryCore-Memory-Ids": ",".join(memory_composition.memory_ids),
             }
         except Exception as exc:
             main_module.logger.warning(
@@ -119,7 +119,7 @@ async def create_chat_completion(
                     "model_id": request.model,
                 },
             )
-            memory_headers = {"X-Ruyi-Memory-Hit-Count": "0"}
+            memory_headers = {"X-LarkMemoryCore-Memory-Hit-Count": "0"}
 
     main_module._validate_model_policy_for_endpoint(
         policy,
@@ -214,7 +214,7 @@ async def create_chat_completion(
         completion_detail=getattr(result, "completion_detail", ""),
     )
     if partial_reason:
-        http_response.headers["X-Ruyi-Partial-Reason"] = partial_reason
+        http_response.headers["X-LarkMemoryCore-Partial-Reason"] = partial_reason
     for header_name, header_value in memory_headers.items():
         http_response.headers[header_name] = header_value
     return response
@@ -404,5 +404,5 @@ async def create_completion(
     ]
     partial_reasons = [reason for reason in partial_reasons if reason]
     if partial_reasons:
-        http_response.headers["X-Ruyi-Partial-Reason"] = partial_reasons[0]
+        http_response.headers["X-LarkMemoryCore-Partial-Reason"] = partial_reasons[0]
     return response

@@ -35,7 +35,7 @@ from ..schemas.requests import ChatCompletionRequest, CompletionRequest
 
 logger = setup_logger("api_server")
 _STREAM_EOF = object()
-PROMPT_TRACE_ENV = "RUYI_DEBUG_PROMPT_IO"
+PROMPT_TRACE_ENV = "LARK_MEMORY_CORE_DEBUG_PROMPT_IO"
 OPENCLAW_FEISHU_METADATA_PREFIX_RE = re.compile(
     r"^\s*Conversation info \(untrusted metadata\):\s*```json\s*.*?```\s*",
     re.DOTALL,

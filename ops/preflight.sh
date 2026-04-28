@@ -20,7 +20,7 @@ if [[ ! -f "${REPO_ROOT}/api_server/proto/compute_pb2.py" || ! -f "${REPO_ROOT}/
   exit 1
 fi
 
-REPO_ROOT="${REPO_ROOT}" "${RUYI_PYTHON_BIN}" - <<'PY'
+REPO_ROOT="${REPO_ROOT}" "${LARK_MEMORY_CORE_PYTHON_BIN}" - <<'PY'
 import json
 import os
 from pathlib import Path
@@ -55,7 +55,7 @@ if payload is not None:
 print("api_key_config: ok")
 PY
 
-mapfile -t MANAGED_UNITS < <(ruyi_managed_units)
+mapfile -t MANAGED_UNITS < <(lark_memory_core_managed_units)
 units_active=0
 for unit in "${MANAGED_UNITS[@]}"; do
   if systemctl --user is-active --quiet "${unit}"; then
@@ -65,7 +65,7 @@ for unit in "${MANAGED_UNITS[@]}"; do
 done
 
 if [[ "${units_active}" -eq 0 ]]; then
-  mapfile -t COMPUTE_PORTS < <(ruyi_local_compute_ports)
+  mapfile -t COMPUTE_PORTS < <(lark_memory_core_local_compute_ports)
   for port in $(printf '%s\n' 8000 18443 "${COMPUTE_PORTS[@]}" | sed '/^$/d' | sort -u); do
     if ss -lnt "( sport = :${port} )" | grep -q ":${port}"; then
       echo "端口已被占用: ${port}" >&2

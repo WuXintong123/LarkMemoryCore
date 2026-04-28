@@ -33,14 +33,14 @@ def test_build_layout_single_node(tmp_path: Path):
     )
 
     assert layout["managed_units"] == [
-        "ruyi-compute.service",
-        "ruyi-api.service",
-        "ruyi-proxy.service",
+        "lark-memory-core-compute.service",
+        "lark-memory-core-api.service",
+        "lark-memory-core-proxy.service",
     ]
     assert layout["managed_log_paths"] == [
-        "%h/ruyi-serving/.run/systemd-compute.log",
-        "%h/ruyi-serving/.run/systemd-api.log",
-        "%h/ruyi-serving/.run/systemd-proxy.log",
+        "%h/lark-memory-core/.run/systemd-compute.log",
+        "%h/lark-memory-core/.run/systemd-api.log",
+        "%h/lark-memory-core/.run/systemd-proxy.log",
     ]
     assert layout["local_compute_ports"] == [9000]
 
@@ -48,26 +48,26 @@ def test_build_layout_single_node(tmp_path: Path):
 def test_write_target_includes_all_managed_units(tmp_path: Path):
     layout = {
         "managed_units": [
-            "ruyi-compute.service",
-            "ruyi-api.service",
-            "ruyi-proxy.service",
+            "lark-memory-core-compute.service",
+            "lark-memory-core-api.service",
+            "lark-memory-core-proxy.service",
         ]
     }
-    target_path = tmp_path / "ruyi-serving.target"
+    target_path = tmp_path / "lark-memory-core.target"
 
     command_write_target(layout, target_path)
 
     content = target_path.read_text(encoding="utf-8")
-    assert "ruyi-compute.service" in content
-    assert "ruyi-api.service" in content
-    assert "ruyi-proxy.service" in content
+    assert "lark-memory-core-compute.service" in content
+    assert "lark-memory-core-api.service" in content
+    assert "lark-memory-core-proxy.service" in content
 
 
 def test_command_log_paths_prints_managed_logs(capsys):
     layout = {
         "managed_log_paths": [
-            "%h/ruyi-serving/.run/systemd-compute.log",
-            "%h/ruyi-serving/.run/systemd-api.log",
+            "%h/lark-memory-core/.run/systemd-compute.log",
+            "%h/lark-memory-core/.run/systemd-api.log",
         ]
     }
 
@@ -75,6 +75,6 @@ def test_command_log_paths_prints_managed_logs(capsys):
 
     captured = capsys.readouterr()
     assert captured.out.splitlines() == [
-        "%h/ruyi-serving/.run/systemd-compute.log",
-        "%h/ruyi-serving/.run/systemd-api.log",
+        "%h/lark-memory-core/.run/systemd-compute.log",
+        "%h/lark-memory-core/.run/systemd-api.log",
     ]

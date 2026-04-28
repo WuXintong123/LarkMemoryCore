@@ -26,12 +26,12 @@ import api_server.main as main_module
 from api_server.main import app
 
 
-def _assert_ruyi_capabilities(payload: dict) -> None:
-    ruyi = payload["ruyi"]
-    assert "supported_endpoints" in ruyi
-    assert "supported_parameters" in ruyi
-    assert "unsupported_parameters" in ruyi
-    assert "ready" in ruyi
+def _assert_lark_memory_core_capabilities(payload: dict) -> None:
+    lark_memory_core = payload["lark_memory_core"]
+    assert "supported_endpoints" in lark_memory_core
+    assert "supported_parameters" in lark_memory_core
+    assert "unsupported_parameters" in lark_memory_core
+    assert "ready" in lark_memory_core
 
 
 def _disabled_auth_manager() -> ApiKeyAuthManager:
@@ -66,7 +66,7 @@ async def test_v1_models_comes_from_compute_server():
             assert body["object"] == "list"
             assert body["data"][0]["id"] == fake_models[0]["id"]
             assert body["data"][0]["owned_by"] == fake_models[0]["owned_by"]
-            _assert_ruyi_capabilities(body["data"][0])
+            _assert_lark_memory_core_capabilities(body["data"][0])
 
 
 @pytest.mark.asyncio
@@ -120,6 +120,6 @@ async def test_model_metadata_is_preserved_from_compute_server():
         assert model["id"] == "compute/model-a"
         assert model["created"] == 1737363858
         assert model["owned_by"] == "compute-owner"
-        assert model["ruyi"]["ready"] is True
+        assert model["lark_memory_core"]["ready"] is True
     finally:
         main_module._model_cache.update(original_cache)

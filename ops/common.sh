@@ -5,13 +5,13 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "${SCRIPT_DIR}/.." && pwd)
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 export SYSTEMD_PAGER=
-export RUYI_PYTHON_BIN="${RUYI_PYTHON_BIN:-$(bash "${REPO_ROOT}/ops/python_cmd.sh")}"
+export LARK_MEMORY_CORE_PYTHON_BIN="${LARK_MEMORY_CORE_PYTHON_BIN:-$(bash "${REPO_ROOT}/ops/python_cmd.sh")}"
 
-ruyi_python() {
-  "${RUYI_PYTHON_BIN}" "$@"
+lark_memory_core_python() {
+  "${LARK_MEMORY_CORE_PYTHON_BIN}" "$@"
 }
 
-ruyi_default_cmake_preset() {
+lark_memory_core_default_cmake_preset() {
   case "$(uname -s)" in
     Linux)
       if [[ "${CI:-}" == "true" ]]; then
@@ -27,31 +27,31 @@ ruyi_default_cmake_preset() {
   esac
 }
 
-ruyi_cmake_preset() {
-  if [[ -n "${RUYI_CMAKE_PRESET:-}" ]]; then
-    printf '%s\n' "${RUYI_CMAKE_PRESET}"
+lark_memory_core_cmake_preset() {
+  if [[ -n "${LARK_MEMORY_CORE_CMAKE_PRESET:-}" ]]; then
+    printf '%s\n' "${LARK_MEMORY_CORE_CMAKE_PRESET}"
   else
-    ruyi_default_cmake_preset
+    lark_memory_core_default_cmake_preset
   fi
 }
 
-ruyi_build_preset() {
-  printf '%s-build\n' "$(ruyi_cmake_preset)"
+lark_memory_core_build_preset() {
+  printf '%s-build\n' "$(lark_memory_core_cmake_preset)"
 }
 
-ruyi_test_preset() {
-  printf '%s-test\n' "$(ruyi_cmake_preset)"
+lark_memory_core_test_preset() {
+  printf '%s-test\n' "$(lark_memory_core_cmake_preset)"
 }
 
 # The shell entrypoints still use direct CMake commands, but they centralize preset
 # selection here so docs, CI, and deploy scripts stay aligned on the same build graph.
-ruyi_configure_cmake() {
-  cmake --preset "$(ruyi_cmake_preset)"
+lark_memory_core_configure_cmake() {
+  cmake --preset "$(lark_memory_core_cmake_preset)"
 }
 
-ruyi_build_targets() {
+lark_memory_core_build_targets() {
   local build_preset
-  build_preset="$(ruyi_build_preset)"
+  build_preset="$(lark_memory_core_build_preset)"
   if [[ $# -eq 0 ]]; then
     cmake --build --preset "${build_preset}"
   else
@@ -59,8 +59,8 @@ ruyi_build_targets() {
   fi
 }
 
-ruyi_ctest() {
-  ctest --preset "$(ruyi_test_preset)" "$@"
+lark_memory_core_ctest() {
+  ctest --preset "$(lark_memory_core_test_preset)" "$@"
 }
 
 require_systemd_user() {
@@ -108,28 +108,28 @@ wait_http_endpoint() {
   return 1
 }
 
-ruyi_layout_cmd() {
-  ruyi_python "${REPO_ROOT}/ops/systemd_layout.py" "$@"
+lark_memory_core_layout_cmd() {
+  lark_memory_core_python "${REPO_ROOT}/ops/systemd_layout.py" "$@"
 }
 
-ruyi_managed_units() {
-  ruyi_layout_cmd units
+lark_memory_core_managed_units() {
+  lark_memory_core_layout_cmd units
 }
 
-ruyi_compute_units() {
-  ruyi_layout_cmd compute-units
+lark_memory_core_compute_units() {
+  lark_memory_core_layout_cmd compute-units
 }
 
-ruyi_local_compute_ports() {
-  ruyi_layout_cmd ports
+lark_memory_core_local_compute_ports() {
+  lark_memory_core_layout_cmd ports
 }
 
-ruyi_log_paths() {
-  ruyi_layout_cmd log-paths
+lark_memory_core_log_paths() {
+  lark_memory_core_layout_cmd log-paths
 }
 
 validate_active_runtime_config() {
-  REPO_ROOT="${REPO_ROOT}" "${RUYI_PYTHON_BIN}" - <<'PY'
+  REPO_ROOT="${REPO_ROOT}" "${LARK_MEMORY_CORE_PYTHON_BIN}" - <<'PY'
 import os
 import sys
 from pathlib import Path

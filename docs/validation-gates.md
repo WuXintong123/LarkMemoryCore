@@ -74,11 +74,11 @@ printf "Say READY only.\n" | ./build/bin/buddy-deepseek-r1-cli --max-tokens=4 --
 Service-side real integration and benchmark:
 
 ```bash
-cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
+cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
 export REAL_INTEGRATION_MODEL="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
-export REAL_DATASET_PATH="/home/huangyiheng/src/ruyi-serving-feishu-live-20260416/tests/real_data/huangyiheng_2026_02_real.jsonl"
+export REAL_DATASET_PATH="/home/huangyiheng/src/lark-memory-core-feishu-live-20260416/tests/real_data/huangyiheng_2026_02_real.jsonl"
 export REAL_INTEGRATION_BASE_URL="http://127.0.0.1:18100"
-export REAL_INTEGRATION_API_KEY="$(cat /home/huangyiheng/src/ruyi-serving-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)"
+export REAL_INTEGRATION_API_KEY="$(cat /home/huangyiheng/src/lark-memory-core-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)"
 export REAL_INTEGRATION_MAX_SAMPLES=1
 export REAL_INTEGRATION_TIMEOUT_S=180
 
@@ -97,7 +97,7 @@ These steps are intentionally outside the default CTest graph because they requi
 Run on the target Linux host from the deployment copy:
 
 ```bash
-cd ~/ruyi-serving
+cd ~/lark-memory-core
 ./ops/install_user_services.sh
 ./ops/preflight.sh
 ./ops/smoke_prod.sh

@@ -44,9 +44,9 @@ from .core.config import (
     RATE_LIMIT_RPM,
     RATE_LIMIT_SCOPE,
     RATE_LIMIT_TTL_S,
-    RUYI_MEMORY_DB_PATH,
-    RUYI_MEMORY_ENGINE_ENABLED,
-    RUYI_MEMORY_MAX_CARDS,
+    LARK_MEMORY_CORE_MEMORY_DB_PATH,
+    LARK_MEMORY_CORE_MEMORY_ENGINE_ENABLED,
+    LARK_MEMORY_CORE_MEMORY_MAX_CARDS,
     STARTUP_REQUIRE_COMPUTE,
     VALID_ROLES,
     _env_bool,
@@ -164,9 +164,9 @@ from .services.model_service import (
 compute_client = ComputeClient(GRPC_SERVER_ADDRESS)
 chat_template = ChatTemplate()
 memory_engine = DecisionMemoryEngine.from_env(
-    enabled=RUYI_MEMORY_ENGINE_ENABLED,
-    db_path=RUYI_MEMORY_DB_PATH,
-    max_cards=RUYI_MEMORY_MAX_CARDS,
+    enabled=LARK_MEMORY_CORE_MEMORY_ENGINE_ENABLED,
+    db_path=LARK_MEMORY_CORE_MEMORY_DB_PATH,
+    max_cards=LARK_MEMORY_CORE_MEMORY_MAX_CARDS,
 )
 auth_manager = ApiKeyAuthManager.from_config(
     legacy_api_key=API_KEY,

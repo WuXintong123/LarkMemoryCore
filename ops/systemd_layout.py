@@ -39,8 +39,8 @@ def build_layout(repo_root: Path, env_values: Dict[str, str]) -> dict:
 
     compute_units = [
         {
-            "unit": "ruyi-compute.service",
-            "service_name": "ruyi-compute.service",
+            "unit": "lark-memory-core-compute.service",
+            "service_name": "lark-memory-core-compute.service",
             "kind": "primary",
             "node_id": "default",
             "instance_name": "",
@@ -49,18 +49,18 @@ def build_layout(repo_root: Path, env_values: Dict[str, str]) -> dict:
             "port": primary_port,
             "local": _is_local_host(primary_host),
             "env_file": "",
-            "log_path": "%h/ruyi-serving/.run/systemd-compute.log",
+            "log_path": "%h/lark-memory-core/.run/systemd-compute.log",
         }
     ]
 
     managed_units = [item["unit"] for item in compute_units]
-    managed_units.extend(["ruyi-api.service", "ruyi-proxy.service"])
+    managed_units.extend(["lark-memory-core-api.service", "lark-memory-core-proxy.service"])
 
     managed_log_paths = [item["log_path"] for item in compute_units]
     managed_log_paths.extend(
         [
-            "%h/ruyi-serving/.run/systemd-api.log",
-            "%h/ruyi-serving/.run/systemd-proxy.log",
+            "%h/lark-memory-core/.run/systemd-api.log",
+            "%h/lark-memory-core/.run/systemd-proxy.log",
         ]
     )
 
@@ -108,7 +108,7 @@ def command_write_target(layout: dict, target_path: Path) -> int:
         "\n".join(
             [
                 "[Unit]",
-                "Description=Ruyi Serving Stack",
+                "Description=LarkMemoryCore Stack",
                 f"Wants={wants}",
                 f"After={wants}",
                 "",

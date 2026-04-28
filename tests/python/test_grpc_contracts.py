@@ -63,7 +63,7 @@ def _policy_record(**policy_overrides):
         "id": "test-model",
         "object": "model",
         "created": 1,
-        "owned_by": "ruyi",
+        "owned_by": "lark_memory_core",
         "_serving_policy": policy,
     }
 
@@ -343,7 +343,7 @@ async def test_chat_completion_chatml_sends_cleaned_latest_user_only_to_grpc():
                         {
                             "role": "user",
                             "content": _wrapped_feishu_user_text(
-                                "@Ruyi Test Bot chatml round-1",
+                                "@LarkMemoryCore Test Bot chatml round-1",
                                 message_id="om_chatml_1",
                                 group=True,
                                 mentioned=True,
@@ -518,7 +518,7 @@ async def test_streaming_chat_completion_sends_latest_user_only_to_grpc():
                         {
                             "role": "user",
                             "content": _wrapped_feishu_user_text(
-                                "@Ruyi Test Bot stream grpc round-1",
+                                "@LarkMemoryCore Test Bot stream grpc round-1",
                                 message_id="om_stream_grpc_1",
                                 group=True,
                                 mentioned=True,

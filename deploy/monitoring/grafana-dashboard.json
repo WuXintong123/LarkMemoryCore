@@ -28,7 +28,7 @@
       "id": 1,
       "targets": [
         {
-          "expr": "rate(ruyi_total_requests[5m])",
+          "expr": "rate(lark_memory_core_total_requests[5m])",
           "legendFormat": "requests/s",
           "refId": "A"
         }
@@ -56,7 +56,7 @@
       "id": 2,
       "targets": [
         {
-          "expr": "ruyi_average_latency_ms",
+          "expr": "lark_memory_core_average_latency_ms",
           "legendFormat": "avg latency",
           "refId": "A"
         }
@@ -84,12 +84,12 @@
       "id": 3,
       "targets": [
         {
-          "expr": "ruyi_compute_active_slots",
+          "expr": "lark_memory_core_compute_active_slots",
           "legendFormat": "active slots",
           "refId": "A"
         },
         {
-          "expr": "ruyi_compute_max_slots",
+          "expr": "lark_memory_core_compute_max_slots",
           "legendFormat": "max slots",
           "refId": "B"
         }
@@ -117,17 +117,17 @@
       "id": 4,
       "targets": [
         {
-          "expr": "ruyi_rejected_requests",
+          "expr": "lark_memory_core_rejected_requests",
           "legendFormat": "rejected",
           "refId": "A"
         },
         {
-          "expr": "ruyi_watchdog_timeouts",
+          "expr": "lark_memory_core_watchdog_timeouts",
           "legendFormat": "watchdog timeouts",
           "refId": "B"
         },
         {
-          "expr": "ruyi_auth_failures",
+          "expr": "lark_memory_core_auth_failures",
           "legendFormat": "auth failures",
           "refId": "C"
         }
@@ -140,7 +140,7 @@
   "schemaVersion": 39,
   "style": "dark",
   "tags": [
-    "ruyi-serving"
+    "lark-memory-core"
   ],
   "templating": {
     "list": []
@@ -151,7 +151,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Ruyi Serving Overview",
+  "title": "LarkMemoryCore Overview",
   "version": 1,
   "weekStart": ""
 }

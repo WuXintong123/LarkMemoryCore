@@ -16,9 +16,9 @@ API_HOST="${FEISHU_OFFICE_API_HOST:-127.0.0.1}"
 COMPUTE_HOST="${FEISHU_OFFICE_COMPUTE_HOST:-0.0.0.0}"
 
 BASE_MODEL_ID="${FEISHU_OFFICE_BASE_MODEL_ID:-deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B}"
-TUNED_MODEL_ID="${FEISHU_OFFICE_TUNED_MODEL_ID:-ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice}"
+TUNED_MODEL_ID="${FEISHU_OFFICE_TUNED_MODEL_ID:-lark-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice}"
 BASE_MODEL_PATH="${FEISHU_OFFICE_BASE_MODEL_PATH:-/home/huangyiheng/buddy-mlir/build/bin/buddy-deepseek-r1-cli}"
-TRAIN_PYTHON="${FEISHU_OFFICE_TRAIN_PYTHON:-${HOME}/.venvs/ruyi-feishu-office/bin/python}"
+TRAIN_PYTHON="${FEISHU_OFFICE_TRAIN_PYTHON:-${HOME}/.venvs/lark-memory-feishu-office/bin/python}"
 ADAPTER_DIR="${FEISHU_OFFICE_ADAPTER_DIR:-${COMP_ROOT}/artifacts/adapter}"
 
 API_LOG="${LOG_ROOT}/api.log"
@@ -50,7 +50,7 @@ read_runtime_api_key() {
     return 0
   fi
   local value
-  value=$(read_openclaw_env_var "RUYI_API_KEY")
+  value=$(read_openclaw_env_var "LARK_MEMORY_CORE_API_KEY")
   if [[ -n "${value}" ]]; then
     printf '%s' "${value}"
     return 0
@@ -62,7 +62,7 @@ ensure_runtime_api_key() {
   local value
   value=$(read_runtime_api_key)
   if [[ -z "${value}" ]]; then
-    echo "Unable to resolve RUYI_API_KEY from ${API_KEY_FILE} or ~/.openclaw/.env" >&2
+    echo "Unable to resolve LARK_MEMORY_CORE_API_KEY from ${API_KEY_FILE} or ~/.openclaw/.env" >&2
     return 1
   fi
   printf '%s' "${value}" > "${API_KEY_FILE}"
@@ -96,7 +96,7 @@ write_runtime_models_file() {
     },
     {
       "id": "${TUNED_MODEL_ID}",
-      "owned_by": "ruyi-office",
+      "owned_by": "lark-office",
       "created": 1776441600,
       "serving": {
         "api_mode": "both",
@@ -112,7 +112,7 @@ write_runtime_models_file() {
         "cli_path": "${TRAIN_PYTHON}",
         "numactl_nodes": "",
         "taskset_cpus": "",
-        "extra_args": "${COMP_ROOT}/runtime/feishu_office_hf_cli.py --daemon-host 127.0.0.1 --daemon-port ${DAEMON_PORT}"
+        "extra_args": "${COMP_ROOT}/runtime/feishu_office_hf_cli.py --daemon-host 127.0.0.1 --daemon-port ${DAEMON_PORT} --timeout-s 180"
       }
     }
   ]
@@ -139,10 +139,10 @@ MAX_QUEUED_REQUESTS=0
 STREAM_IDLE_TIMEOUT_S=120
 NON_STREAM_IDLE_TIMEOUT_S=12
 NON_STREAM_MAX_EXECUTION_S=240
-RUYI_DEBUG_PROMPT_IO=1
-RUYI_MEMORY_ENGINE_ENABLED=1
-RUYI_MEMORY_DB_PATH=${MEMORY_ROOT}/decision_memory.sqlite3
-RUYI_MEMORY_MAX_CARDS=3
+LARK_MEMORY_CORE_DEBUG_PROMPT_IO=1
+LARK_MEMORY_CORE_MEMORY_ENGINE_ENABLED=1
+LARK_MEMORY_CORE_MEMORY_DB_PATH=${MEMORY_ROOT}/decision_memory.sqlite3
+LARK_MEMORY_CORE_MEMORY_MAX_CARDS=3
 CLUSTER_CONFIG_FILE=
 LOG_LEVEL=INFO
 EOF

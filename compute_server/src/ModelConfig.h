@@ -41,7 +41,7 @@ struct ModelToolConfig {
 
   ModelToolConfig()
       : cli_path(""), numactl_nodes("0,1,2,3"), taskset_cpus("0-47"),
-        extra_args("--no-stats"), owned_by("ruyi-serving"), created(0) {}
+        extra_args("--no-stats"), owned_by("lark-memory-core"), created(0) {}
 };
 
 class ModelConfigManager {

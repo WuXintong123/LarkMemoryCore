@@ -7,7 +7,7 @@
 - Compute port:
 - OpenClaw profile:
 - Feishu app:
-- RUYI_DEBUG_PROMPT_IO:
+- LARK_MEMORY_CORE_DEBUG_PROMPT_IO:
 
 ## Scenario
 

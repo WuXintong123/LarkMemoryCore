@@ -8,8 +8,8 @@
     "standardized_response"
   ],
   "document_count": 34,
-  "row_count": 1595,
-  "train_row_count": 1070,
-  "validation_row_count": 180,
-  "test_row_count": 345
+  "row_count": 1615,
+  "train_row_count": 1075,
+  "validation_row_count": 190,
+  "test_row_count": 350
 }

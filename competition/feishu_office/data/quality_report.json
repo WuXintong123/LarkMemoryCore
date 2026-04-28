@@ -1,9 +1,9 @@
 {
-  "total_rows": 1595,
+  "total_rows": 1615,
   "rows_by_split": {
-    "test": 345,
-    "train": 1070,
-    "validation": 180
+    "test": 350,
+    "train": 1075,
+    "validation": 190
   },
   "unique_sources_by_split": {
     "test": 6,
@@ -11,16 +11,16 @@
     "validation": 5
   },
   "rows_by_task": {
-    "knowledge_qa": 319,
-    "information_summary": 319,
-    "meeting_minutes": 319,
-    "weekly_report": 319,
-    "standardized_response": 319
+    "knowledge_qa": 323,
+    "information_summary": 323,
+    "meeting_minutes": 323,
+    "weekly_report": 323,
+    "standardized_response": 323
   },
   "rows_by_source_scheme": {
-    "repo": 430,
+    "repo": 450,
     "https": 1165
   },
-  "avg_input_chars": 446.71,
-  "avg_output_chars": 761.64
+  "avg_input_chars": 446.47,
+  "avg_output_chars": 762.6
 }

@@ -1,27 +1,27 @@
-set(RUYI_PKGCONFIG_INSTALL_HINT "")
-set(RUYI_PROTOBUF_INSTALL_HINT "")
-set(RUYI_GRPC_INSTALL_HINT "")
-set(RUYI_OPENSSL_INSTALL_HINT "")
-set(RUYI_GTEST_INSTALL_HINT "")
+set(LARK_MEMORY_CORE_PKGCONFIG_INSTALL_HINT "")
+set(LARK_MEMORY_CORE_PROTOBUF_INSTALL_HINT "")
+set(LARK_MEMORY_CORE_GRPC_INSTALL_HINT "")
+set(LARK_MEMORY_CORE_OPENSSL_INSTALL_HINT "")
+set(LARK_MEMORY_CORE_GTEST_INSTALL_HINT "")
 
 if(EXISTS "/etc/debian_version")
-    set(RUYI_PKGCONFIG_INSTALL_HINT "sudo apt-get install pkg-config")
-    set(RUYI_PROTOBUF_INSTALL_HINT "sudo apt-get install protobuf-compiler libprotobuf-dev")
-    set(RUYI_GRPC_INSTALL_HINT "sudo apt-get install libgrpc++-dev libgrpc-dev protobuf-compiler-grpc")
-    set(RUYI_OPENSSL_INSTALL_HINT "sudo apt-get install libssl-dev")
-    set(RUYI_GTEST_INSTALL_HINT "sudo apt-get install libgtest-dev")
+    set(LARK_MEMORY_CORE_PKGCONFIG_INSTALL_HINT "sudo apt-get install pkg-config")
+    set(LARK_MEMORY_CORE_PROTOBUF_INSTALL_HINT "sudo apt-get install protobuf-compiler libprotobuf-dev")
+    set(LARK_MEMORY_CORE_GRPC_INSTALL_HINT "sudo apt-get install libgrpc++-dev libgrpc-dev protobuf-compiler-grpc")
+    set(LARK_MEMORY_CORE_OPENSSL_INSTALL_HINT "sudo apt-get install libssl-dev")
+    set(LARK_MEMORY_CORE_GTEST_INSTALL_HINT "sudo apt-get install libgtest-dev")
 elseif(EXISTS "/etc/redhat-release")
-    set(RUYI_PKGCONFIG_INSTALL_HINT "sudo yum install pkgconfig")
-    set(RUYI_PROTOBUF_INSTALL_HINT "sudo yum install protobuf-compiler protobuf-devel")
-    set(RUYI_GRPC_INSTALL_HINT "sudo yum install grpc-devel protobuf-devel")
-    set(RUYI_OPENSSL_INSTALL_HINT "sudo yum install openssl-devel")
-    set(RUYI_GTEST_INSTALL_HINT "sudo yum install gtest-devel")
+    set(LARK_MEMORY_CORE_PKGCONFIG_INSTALL_HINT "sudo yum install pkgconfig")
+    set(LARK_MEMORY_CORE_PROTOBUF_INSTALL_HINT "sudo yum install protobuf-compiler protobuf-devel")
+    set(LARK_MEMORY_CORE_GRPC_INSTALL_HINT "sudo yum install grpc-devel protobuf-devel")
+    set(LARK_MEMORY_CORE_OPENSSL_INSTALL_HINT "sudo yum install openssl-devel")
+    set(LARK_MEMORY_CORE_GTEST_INSTALL_HINT "sudo yum install gtest-devel")
 else()
-    set(RUYI_PKGCONFIG_INSTALL_HINT "install pkg-config")
-    set(RUYI_PROTOBUF_INSTALL_HINT "install protobuf compiler and development headers")
-    set(RUYI_GRPC_INSTALL_HINT "install grpc++, grpc, and grpc_cpp_plugin")
-    set(RUYI_OPENSSL_INSTALL_HINT "install OpenSSL development headers and libraries")
-    set(RUYI_GTEST_INSTALL_HINT "install GoogleTest development package")
+    set(LARK_MEMORY_CORE_PKGCONFIG_INSTALL_HINT "install pkg-config")
+    set(LARK_MEMORY_CORE_PROTOBUF_INSTALL_HINT "install protobuf compiler and development headers")
+    set(LARK_MEMORY_CORE_GRPC_INSTALL_HINT "install grpc++, grpc, and grpc_cpp_plugin")
+    set(LARK_MEMORY_CORE_OPENSSL_INSTALL_HINT "install OpenSSL development headers and libraries")
+    set(LARK_MEMORY_CORE_GTEST_INSTALL_HINT "install GoogleTest development package")
 endif()
 
 find_package(PkgConfig QUIET)
@@ -29,7 +29,7 @@ find_package(PkgConfig QUIET)
 if(NOT PKG_CONFIG_FOUND)
     message(STATUS
         "pkg-config not found; falling back to CMake/manual dependency discovery. "
-        "Install it for more reliable detection: ${RUYI_PKGCONFIG_INSTALL_HINT}"
+        "Install it for more reliable detection: ${LARK_MEMORY_CORE_PKGCONFIG_INSTALL_HINT}"
     )
 endif()
 
@@ -73,16 +73,16 @@ if(OPENSSL_FOUND)
 else()
     message(STATUS
         "OpenSSL development files were not found via CMake. "
-        "If configure or link fails, install OpenSSL: ${RUYI_OPENSSL_INSTALL_HINT}"
+        "If configure or link fails, install OpenSSL: ${LARK_MEMORY_CORE_OPENSSL_INSTALL_HINT}"
     )
 endif()
 
-set(RUYI_MANUAL_BIN_PATHS
+set(LARK_MEMORY_CORE_MANUAL_BIN_PATHS
     /usr/bin
     /usr/local/bin
 )
 
-set(RUYI_MANUAL_LIB_PATHS
+set(LARK_MEMORY_CORE_MANUAL_LIB_PATHS
     /usr/lib64
     /usr/local/lib64
     /usr/lib
@@ -90,7 +90,7 @@ set(RUYI_MANUAL_LIB_PATHS
     /usr/lib/x86_64-linux-gnu
 )
 
-set(RUYI_MANUAL_INCLUDE_PATHS
+set(LARK_MEMORY_CORE_MANUAL_INCLUDE_PATHS
     /usr/include
     /usr/local/include
 )
@@ -116,14 +116,14 @@ if(DEFINED Protobuf_PROTOC_EXECUTABLE AND EXISTS "${Protobuf_PROTOC_EXECUTABLE}"
 else()
     find_program(PROTOC_EXECUTABLE
         NAMES protoc
-        PATHS ${RUYI_MANUAL_BIN_PATHS}
+        PATHS ${LARK_MEMORY_CORE_MANUAL_BIN_PATHS}
     )
 endif()
 
 if(NOT PROTOC_EXECUTABLE)
     message(FATAL_ERROR
         "protoc not found. Install the protobuf compiler.\n"
-        "  ${RUYI_PROTOBUF_INSTALL_HINT}"
+        "  ${LARK_MEMORY_CORE_PROTOBUF_INSTALL_HINT}"
     )
 endif()
 
@@ -143,22 +143,22 @@ if(NOT gRPC_FOUND)
 
     find_library(GRPC_LIBRARY
         NAMES grpc++
-        PATHS ${RUYI_MANUAL_LIB_PATHS}
+        PATHS ${LARK_MEMORY_CORE_MANUAL_LIB_PATHS}
     )
 
     find_library(GRPC_REFLECTION_LIBRARY
         NAMES grpc++_reflection
-        PATHS ${RUYI_MANUAL_LIB_PATHS}
+        PATHS ${LARK_MEMORY_CORE_MANUAL_LIB_PATHS}
     )
 
     find_path(GRPC_INCLUDE_DIR
         NAMES grpcpp/grpcpp.h
-        PATHS ${RUYI_MANUAL_INCLUDE_PATHS}
+        PATHS ${LARK_MEMORY_CORE_MANUAL_INCLUDE_PATHS}
     )
 
     find_program(GRPC_CPP_PLUGIN
         NAMES grpc_cpp_plugin
-        PATHS ${RUYI_MANUAL_BIN_PATHS}
+        PATHS ${LARK_MEMORY_CORE_MANUAL_BIN_PATHS}
     )
 
     if(GRPC_LIBRARY AND GRPC_INCLUDE_DIR AND GRPC_CPP_PLUGIN)
@@ -175,11 +175,11 @@ endif()
 if(NOT gRPC_FOUND)
     message(FATAL_ERROR
         "gRPC not found. Install the C++ runtime and compiler plugin.\n"
-        "  ${RUYI_GRPC_INSTALL_HINT}"
+        "  ${LARK_MEMORY_CORE_GRPC_INSTALL_HINT}"
     )
 endif()
 
-function(ruyi_target_link_grpc_and_protobuf target_name)
+function(lark_memory_core_target_link_grpc_and_protobuf target_name)
     if(TARGET gRPC::grpc++)
         target_link_libraries(${target_name} PRIVATE
             gRPC::grpc++

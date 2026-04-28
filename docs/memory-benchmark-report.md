@@ -40,7 +40,7 @@ python3 -m pytest -q tests/python/test_memory_engine.py
 
 ## 矛盾更新测试
 
-目标：先后输入冲突配置，系统按时间和主题覆盖旧版本，只返回最新 active 决策。
+目标：先后输入冲突配置，系统按事件时间和主题覆盖旧版本，只返回最新 active 决策。评测同时覆盖旧事件按正常顺序到达，以及旧事件在新事件之后迟到写入的场景。
 
 测试过程：
 
@@ -51,6 +51,8 @@ python3 -m pytest -q tests/python/test_memory_engine.py
 3. 两条事件使用同一租户、项目、会话和主题 `request_timeout_ms`。
 4. 第二条事件时间晚于第一条事件。
 5. 查询“竞赛运行时 request_timeout_ms 使用多少？”。
+6. 反向注入顺序：先注入 2026-04-18 的实际运行时配置，再迟到注入 2026-04-13 的旧运行手册配置。
+7. 再次查询同一问题。
 
 验收指标：
 
@@ -58,6 +60,7 @@ python3 -m pytest -q tests/python/test_memory_engine.py
 - 最新结果包含 `300000`
 - 最新结果 `version = 2`
 - 旧版本状态为 `superseded`
+- 迟到旧事件的 `superseded_count = 0`，不会把 active 版本改回 `30000`
 - `/v1/memory/report` 中 `version_correctness = 1.0`
 
 ## 效能指标验证
@@ -100,7 +103,7 @@ python3 -m pytest -q tests/python/test_memory_engine.py
 当前结果：
 
 ```text
-4 passed
+6 passed
 ```
 
 完整回归仍需按 `docs/validation-gates.md` 执行。涉及真实模型和实机飞书验收的命令只应在 `buddy-ascend` 隔离运行时上执行。

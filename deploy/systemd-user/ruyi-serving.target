@@ -1,4 +1,0 @@
-[Unit]
-Description=Ruyi Serving Stack
-Wants=ruyi-compute.service ruyi-api.service ruyi-proxy.service
-After=ruyi-compute.service ruyi-api.service ruyi-proxy.service
