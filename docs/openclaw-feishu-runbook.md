@@ -67,7 +67,7 @@ openclaw models list
 1. 先运行服务侧检查脚本：
 
 ```bash
-cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
+cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
 export LARK_MEMORY_CORE_FEISHU_API_LOG_PATH=.run/feishu-office-competition/logs/api.log
 export LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/logs/compute.log
 ./ops/openclaw_feishu_buddy_ascend_check.sh \
@@ -90,7 +90,7 @@ export LARK_MEMORY_CORE_FEISHU_COMPUTE_LOG_PATH=.run/feishu-office-competition/l
 6. 对流式场景，按回车前可以先确认：
 
 ```bash
-curl -fsS -H "Authorization: Bearer $(cat /home/huangyiheng/src/lark-memory-core-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)" \
+curl -fsS -H "Authorization: Bearer $(cat /home/huangyiheng/src/ruyi-serving-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)" \
   http://127.0.0.1:18100/v1/admin/metrics
 ```
 

@@ -1,0 +1,20 @@
+{
+  "scenario": "group-at-stream",
+  "trace_token_round_1": "GROUP-S-1-20260418-A",
+  "trace_token_round_2": "GROUP-S-2-20260418-B",
+  "request_id": "7c04f1bb-5abe-45d8-94e1-99f088f0e4a4",
+  "api_prompt": "GROUP-S-2-20260418-B 请用一句话总结本轮需求。",
+  "compute_prompt": "GROUP-S-2-20260418-B 请用一句话总结本轮需求。",
+  "status_code": 200,
+  "checks": {
+    "found_raw_request_log": true,
+    "found_api_prompt_log": true,
+    "found_compute_prompt_log": true,
+    "raw_request_contains_round_1": true,
+    "raw_request_contains_round_2": true,
+    "api_prompt_contains_round_2_only": true,
+    "compute_prompt_matches_api_prompt": true,
+    "http_status_is_200": true
+  },
+  "passed": true
+}

@@ -15,6 +15,7 @@ from .core.errors import (
 from .core.lifecycle import lifespan
 from .core.middleware import GracefulShutdownMiddleware, RequestLoggingMiddleware
 from .routers.admin import router as admin_router
+from .routers.competition import router as competition_router
 from .routers.inference import router as inference_router
 from .routers.memory import router as memory_router
 from .routers.models import router as models_router
@@ -51,6 +52,7 @@ def create_app() -> FastAPI:
     app.include_router(models_router)
     app.include_router(inference_router)
     app.include_router(memory_router)
+    app.include_router(competition_router)
     app.include_router(admin_router)
 
     return app

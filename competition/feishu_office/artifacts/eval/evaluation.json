@@ -1,0 +1,74 @@
+{
+  "baseline": {
+    "model_id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    "sample_count": 3,
+    "success_count": 3,
+    "failure_count": 0,
+    "avg_latency_ms": 151614.08,
+    "avg_format_compliance": 0.0,
+    "avg_char_f1": 0.1802,
+    "samples": [
+      {
+        "id": "repo_contributing-009-knowledge_qa",
+        "task": "knowledge_qa",
+        "latency_ms": 155209.36888316646,
+        "format_compliance": 0.0,
+        "char_f1": 0.14285714285714288,
+        "output": "嗯，用户给了一个挺有意思的查询，主题是“Ruyi Serving Contributing!”，材料是“!citly.”。首先，我需要理解用户的需求。看起来用户可能是在寻找一种方式来贡献，可能是在某个社区或者项目中，希望得到帮助或支持。\n\n材料“!citly.”看起来像是一个链接，可能是一个平台或者工具"
+      },
+      {
+        "id": "repo_contributing-009-information_summary",
+        "task": "information_summary",
+        "latency_ms": 154190.38484687917,
+        "format_compliance": 0.0,
+        "char_f1": 0.0909090909090909,
+        "output": "嗯，用户给了一个挺有意思的查询，主题是“Ruyi Serving Contributing!”，原始材料是“citly.”。首先，我需要理解用户的需求。看起来用户想表达一种贡献感，可能是在某个社区或者项目中，希望Ruyi能够继续为贡献更多。\n\n“citly.”这个词听起来像是一个缩写，可能是一个"
+      },
+      {
+        "id": "repo_contributing-009-meeting_minutes",
+        "task": "meeting_minutes",
+        "latency_ms": 145442.49869487248,
+        "format_compliance": 0.0,
+        "char_f1": 0.30697674418604654,
+        "output": "嗯，用户给了一个任务，主题是“Ruyi Serving Contributing!”，会议材料是“citly.”。首先，我需要理解这两个关键词的意思。Ruyi可能是一个角色，比如一个项目负责人或者贡献者，而“Contributing!”可能意味着贡献、参与或付出。citly可能是一个缩写，可能是“中国互联网"
+      }
+    ],
+    "failures": []
+  },
+  "tuned": {
+    "model_id": "ruyi-office/DeepSeek-R1-Distill-Qwen-1.5B-FeishuOffice",
+    "sample_count": 3,
+    "success_count": 3,
+    "failure_count": 0,
+    "avg_latency_ms": 6313.85,
+    "avg_format_compliance": 0.0,
+    "avg_char_f1": 0.0787,
+    "samples": [
+      {
+        "id": "repo_contributing-009-knowledge_qa",
+        "task": "knowledge_qa",
+        "latency_ms": 6431.7287530284375,
+        "format_compliance": 0.0,
+        "char_f1": 0.03478260869565218,
+        "output": "Ruyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nRuyi Serving\nR"
+      },
+      {
+        "id": "repo_contributing-009-information_summary",
+        "task": "information_summary",
+        "latency_ms": 6306.390468962491,
+        "format_compliance": 0.0,
+        "char_f1": 0.02097902097902098,
+        "output": "Ruyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing\nRuyi Serving\nContributing"
+      },
+      {
+        "id": "repo_contributing-009-meeting_minutes",
+        "task": "meeting_minutes",
+        "latency_ms": 6203.41590186581,
+        "format_compliance": 0.0,
+        "char_f1": 0.1803921568627451,
+        "output": " citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly.\n citly."
+      }
+    ],
+    "failures": []
+  }
+}

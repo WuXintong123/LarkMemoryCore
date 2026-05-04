@@ -38,16 +38,36 @@ compute_server/*.grpc.pb.h
 # OS
 .DS_Store
 Thumbs.db
+node_modules/
+competition/feishu_office/demo_console/dist/
+competition/feishu_office/demo_console/*.tsbuildinfo
+competition/feishu_office/demo_console/vite.config.js
+competition/feishu_office/demo_console/vite.config.d.ts
+.playwright-cli/
 
 # Test artifacts
 .hypothesis/
 .pytest_cache/
 .run/
 competition/feishu_office/cache/
-competition/feishu_office/artifacts/
+competition/feishu_office/artifacts/*
+!competition/feishu_office/artifacts/eval/
+!competition/feishu_office/artifacts/eval/evaluation.json
+!competition/feishu_office/artifacts/eval/evaluation.md
 tests/cpp/test_model_validation
 tests/cpp/test_structured_logger
 tests/cpp/test_token_counter
+output/
+docs/superpowers/
+reports/openclaw-feishu-*/*
+!reports/openclaw-feishu-20260418-045903-dm-nonstream/summary.json
+!reports/openclaw-feishu-20260418-045903-dm-nonstream/summary.md
+!reports/openclaw-feishu-20260418-052933-dm-stream/summary.json
+!reports/openclaw-feishu-20260418-052933-dm-stream/summary.md
+!reports/openclaw-feishu-20260418-085833-group-at-nonstream/summary.json
+!reports/openclaw-feishu-20260418-085833-group-at-nonstream/summary.md
+!reports/openclaw-feishu-20260418-091110-group-at-stream/summary.json
+!reports/openclaw-feishu-20260418-091110-group-at-stream/summary.md
 
 # Script command logs
 typescript

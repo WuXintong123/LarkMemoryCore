@@ -31,6 +31,7 @@ ADMIN_ENDPOINTS = (
     "/v1/memory/events",
     "/v1/memory/search",
     "/v1/memory/report",
+    "/v1/competition/feishu-office/evidence",
     "/metrics",
 )
 PARTIAL_REASON_VALUES = {

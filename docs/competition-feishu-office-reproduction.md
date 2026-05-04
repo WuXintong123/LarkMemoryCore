@@ -28,10 +28,32 @@ Run everything on `buddy-ascend`.
 ssh buddy-ascend
 ```
 
+If the operator machine does not already know the host, configure
+`~/.ssh/config` with the verified jump host and GPU runtime server:
+
+```sshconfig
+Host tiaoban
+    HostName isrc.iscas.ac.cn
+    Port 5022
+    User yiheng
+
+Host buddy-gpuplct
+    HostName 192.168.6.119
+    Port 22
+    User huangyiheng
+    ProxyCommand ssh tiaoban -W %h:%p
+```
+
+Then enter the full model-inference runtime server:
+
+```bash
+ssh buddy-gpuplct
+```
+
 Define the exact paths once:
 
 ```bash
-export REPO_ROOT=/home/huangyiheng/src/lark-memory-core-feishu-live-20260416
+export REPO_ROOT=/home/huangyiheng/src/ruyi-serving-feishu-live-20260416
 export BUDDY_MLIR_ROOT=/home/huangyiheng/buddy-mlir
 export TRAIN_VENV=$HOME/.venvs/lark-memory-feishu-office
 export OPENCLAW_ENV=$HOME/.openclaw/.env

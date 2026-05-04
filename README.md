@@ -4,6 +4,12 @@ OpenAI API-compatible serving built with FastAPI + gRPC.
 
 LarkMemoryCore 是一个面向飞书项目决策记忆和真实模型后端的 OpenAI API 兼容推理服务，采用 FastAPI + gRPC 双进程架构。
 
+Commercial identity for the RuyiAI-Stack launch:
+
+- Organization: `RuyiAI-Stack`
+- Public site: `https://ruyiai-stack.github.io`
+- Public repository: `RuyiAI-Stack/ruyiai-stack.github.io`
+
 ## What This Repo Expects
 
 - the official build and test entrypoint is root `CMake + Ninja + CTest`
@@ -211,6 +217,18 @@ Useful endpoints:
 - `POST /v1/memory/events`
 - `GET /v1/memory/search`
 - `GET /v1/memory/report`
+- `GET /v1/competition/feishu-office/evidence`
+
+Competition demo helpers:
+
+```bash
+python3 -m competition.feishu_office.seed_memory_engine \
+  --base-url http://127.0.0.1:18100 \
+  --api-key "$LARK_MEMORY_CORE_API_KEY"
+```
+
+The evidence endpoint summarizes real dataset, evaluation, and Feishu
+acceptance artifacts. It intentionally omits model answer bodies.
 
 ## gRPC Contract Rule
 
@@ -244,11 +262,11 @@ These gates require:
 Example:
 
 ```bash
-cd /home/huangyiheng/src/lark-memory-core-feishu-live-20260416
+cd /home/huangyiheng/src/ruyi-serving-feishu-live-20260416
 export REAL_INTEGRATION_MODEL="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
-export REAL_DATASET_PATH="/home/huangyiheng/src/lark-memory-core-feishu-live-20260416/tests/real_data/huangyiheng_2026_02_real.jsonl"
+export REAL_DATASET_PATH="/home/huangyiheng/src/ruyi-serving-feishu-live-20260416/tests/real_data/huangyiheng_2026_02_real.jsonl"
 export REAL_INTEGRATION_BASE_URL="http://127.0.0.1:18100"
-export REAL_INTEGRATION_API_KEY="$(cat /home/huangyiheng/src/lark-memory-core-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)"
+export REAL_INTEGRATION_API_KEY="$(cat /home/huangyiheng/src/ruyi-serving-feishu-live-20260416/.run/feishu-office-competition/runtime/api_key.txt)"
 export REAL_INTEGRATION_MAX_SAMPLES=1
 export REAL_INTEGRATION_TIMEOUT_S=180
 ```

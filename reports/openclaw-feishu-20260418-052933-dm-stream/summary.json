@@ -1,0 +1,20 @@
+{
+  "scenario": "dm-stream",
+  "trace_token_round_1": "DM-S-1-20260418-A",
+  "trace_token_round_2": "DM-S-2-20260418-B",
+  "request_id": "4e8ce165-bf46-47b2-863e-25bdaba9b88a",
+  "api_prompt": "DM-S-2-20260418-B 请用一句话总结本轮需求。",
+  "compute_prompt": "DM-S-2-20260418-B 请用一句话总结本轮需求。",
+  "status_code": 200,
+  "checks": {
+    "found_raw_request_log": true,
+    "found_api_prompt_log": true,
+    "found_compute_prompt_log": true,
+    "raw_request_contains_round_1": true,
+    "raw_request_contains_round_2": true,
+    "api_prompt_contains_round_2_only": true,
+    "compute_prompt_matches_api_prompt": true,
+    "http_status_is_200": true
+  },
+  "passed": true
+}

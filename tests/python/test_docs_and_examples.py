@@ -50,6 +50,7 @@ def test_readme_mentions_key_public_and_admin_routes():
         "GET /v1/models/{model_id}",
         "GET /metrics",
         "POST /v1/admin/reload-models",
+        "GET /v1/competition/feishu-office/evidence",
     ):
         assert route in readme
 
@@ -62,6 +63,7 @@ def test_openapi_exposes_key_paths():
         "/v1/models/{model_id}",
         "/metrics",
         "/v1/admin/reload-models",
+        "/v1/competition/feishu-office/evidence",
     ):
         assert path in schema["paths"]
 
