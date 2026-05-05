@@ -53,10 +53,134 @@ Competition runtime helpers:
 - `./ops/feishu_office_competition_preflight.sh`
 - `./ops/feishu_office_competition_start.sh`
 - `./ops/feishu_office_competition_stop.sh`
+- `./ops/feishu_office_competition_start_kimi.sh` — slim launcher when only
+  `moonshot/kimi-k2.5` is needed (skips the HuggingFace adapter daemon).
 
 Exact end-to-end reproduction:
 
 - `docs/competition-feishu-office-reproduction.md`
+
+## Feishu Chat Bridge
+
+`ops/feishu_bridge.py` is a long-connection (WebSocket) bridge that lets a
+Feishu / Lark bot talk to LarkMemoryCore. It receives `im.message.receive_v1`
+events from the Feishu Open Platform via `lark-oapi`, calls
+`/v1/chat/completions` with project-memory metadata, and replies in the same
+chat. No public webhook URL is required.
+
+### Architecture
+
+```
+Feishu user ──(WS)──▶ feishu_bridge.py ──(HTTP)──▶ LarkMemoryCore /v1/chat/completions
+                            │                              │
+                            │                              └─▶ moonshot/kimi-k2.5
+                            │                                  via ops/openclaw_kimi_cli.py
+                            └─(reply)── Feishu im.v1.message.reply
+```
+
+### Behaviour
+
+- **Single chat (`p2p`)**: every message is treated as a conversation with
+  the bot and gets a reply.
+- **Group chat**: the bridge inspects `message.mentions[*].id.open_id` and
+  only replies when the bot's own `open_id` is mentioned. Non-mention
+  messages are still recorded with an `observe-only` log line, which is
+  useful when the app is granted `im:message.group_msg(:readonly)` so the
+  bot needs to read every message but only respond when explicitly addressed.
+- Messages are processed on a 4-thread worker pool so the WebSocket handler
+  acks each event in milliseconds. A 10-minute / 500-entry sliding-window
+  dedup map drops Feishu retries with the same `message_id`.
+
+### Required Feishu permissions
+
+Apply on the Feishu Open Platform under **Permission Management**, then
+**publish a new app version** (permissions do not take effect until a
+version is approved):
+
+| Permission | Purpose |
+| --- | --- |
+| `im:message` | Base IM capability |
+| `im:message:send_as_bot` | Reply as the bot |
+| `im:message.group_at_msg` (+ `:readonly`) | Receive `@bot` events in groups |
+| `im:message.p2p_msg` (+ `:readonly`) | Receive 1:1 messages |
+| `im:message.group_msg.readonly` | (Optional) read every group message; required only if you want the bridge to log non-`@` messages too |
+
+Then under **Event Subscription** select **Use long connection to receive
+events** and add the `im.message.receive_v1` event.
+
+### Configuration
+
+Copy the template and fill in real credentials:
+
+```bash
+cp ops/feishu_bridge.env.example ops/feishu_bridge.env
+chmod 600 ops/feishu_bridge.env
+```
+
+Required fields:
+
+| Variable | Description |
+| --- | --- |
+| `FEISHU_APP_ID`, `FEISHU_APP_SECRET` | App credentials from the Open Platform. |
+| `LARK_MEMORY_CORE_API_KEY` | Same key used by the API server (`.run/feishu-office-competition/runtime/api_key.txt`). |
+| `LARK_MEMORY_CORE_BASE_URL` | Default `http://127.0.0.1:18100`. |
+| `LARK_MEMORY_CORE_MODEL` | Default `moonshot/kimi-k2.5`. |
+| `LARK_MEMORY_CORE_TENANT_ID`, `..._PROJECT_ID` | Memory scope; must match the events injected via `seed_memory_engine` for hits to count. |
+| `FEISHU_BOT_OPEN_ID` | Bot `open_id`, used to detect `@bot` in groups. Look up via `GET https://open.feishu.cn/open-apis/bot/v3/info`. |
+| `FEISHU_VERIFY_TOKEN`, `FEISHU_ENCRYPT_KEY` | Only needed if enabled in the event subscription page. |
+
+`ops/feishu_bridge.env` is gitignored — never commit real secrets. The
+template `ops/feishu_bridge.env.example` is the canonical reference.
+
+### Install dependencies
+
+The bridge needs `lark-oapi` and `requests` in the runtime Python
+environment:
+
+```bash
+python -m pip install lark-oapi requests
+```
+
+### Run
+
+In one shell, bring up LarkMemoryCore (slim, kimi-only path is enough for
+the bridge):
+
+```bash
+bash ops/feishu_office_competition_start_kimi.sh
+curl -sS http://127.0.0.1:18100/ready
+```
+
+In a second shell, start the bridge:
+
+```bash
+set -a; source ops/feishu_bridge.env; set +a
+python ops/feishu_bridge.py
+```
+
+Logs stream to stdout and to
+`.run/feishu-office-competition/logs/feishu_bridge.log`. Background usage:
+
+```bash
+nohup bash -lc 'set -a; source ops/feishu_bridge.env; set +a; \
+  exec python ops/feishu_bridge.py' \
+  >> .run/feishu-office-competition/logs/feishu_bridge.stdout.log 2>&1 < /dev/null &
+disown
+```
+
+### Verify
+
+`@`-mention the bot in a Feishu group (or DM it) with any prompt; expect
+three log lines:
+
+```
+INFO received chat_type=group mentioned=True chat_id=oc_... message_id=om_... chars=N preview=...
+INFO memory_hits=K latency=Xs prompt_chars=N reply_chars=M
+INFO reply ok message_id=om_...
+```
+
+A non-mention group message logs `mentioned=False` followed by
+`observe-only ... (no reply, not mentioned)` and triggers no LLM call.
 
 ## Build Prerequisites
 

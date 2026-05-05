@@ -78,4 +78,6 @@ typescript
 # Config files
 models.json
 .env
+ops/feishu_bridge.env
+*.env.local
 fastapi.log
